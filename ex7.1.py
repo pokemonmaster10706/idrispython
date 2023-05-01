@@ -1,0 +1,6 @@
+fname = input("enter file name: ")
+fh = open(fname)
+rfh = fh.read()
+urfh = rfh.upper()
+surfh = urfh.rstrip()
+print(surfh)
