@@ -9,6 +9,8 @@ while True:
     except:
         print('please enter a valid integer value')
 
+for i in range(student_count):
+    name = input('enter student '+str(i+1)+' name:  ')
 
 total_cost = (entryticket_cost*student_count)-(student_count//10)+coach_cost
 costper_student = (total_cost/student_count)+1
