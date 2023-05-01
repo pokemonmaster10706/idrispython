@@ -1,5 +1,6 @@
 coach_cost = 550
 entryticket_cost = 30
+
 while True:
     try:
         student_count = int(input('enter the number of student who wish to go to the school trip : '))
@@ -11,6 +12,8 @@ while True:
 
 for i in range(student_count):
     name = input('enter student '+str(i+1)+' name:  ')
+
+
 
 total_cost = (entryticket_cost*student_count)-(student_count//10)+coach_cost
 costper_student = (total_cost/student_count)+1
