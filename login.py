@@ -7,7 +7,3 @@ while True:
         print('the user name',username,'is already in use, please enter a different one.')
         continue
     password = input('enter a password for '+username+' \npassword must contain more than 8 characters,a capital and a lowercase alphabet, a number, and a special character :')
-
-
-
-    
