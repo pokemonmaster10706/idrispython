@@ -1,5 +1,6 @@
 coach_cost = 550
 entryticket_cost = 30
+student_dict = {}
 
 while True:
     try:
@@ -12,6 +13,9 @@ while True:
 
 for i in range(student_count):
     name = input('enter student '+str(i+1)+' name:  ')
+    if name in student_dict:
+        print(name,'has already been entered, please enter next student')
+        continue
 
 
 
