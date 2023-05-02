@@ -65,3 +65,4 @@ def main():
         print('-'*30)
 
     profit()
+main()
