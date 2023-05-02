@@ -16,6 +16,13 @@ for i in range(student_count):
     if name in student_dict:
         print(name,'has already been entered, please enter next student')
         continue
+    else:
+        pay_status=input('has this student payed for the trip(y/n)?   \n\n')
+        if pay_status == 'y':
+            pay = 'paid'
+        else:
+            pay = 'pending'
+        student_dict[name]=pay
 
 
 
