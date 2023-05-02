@@ -3,7 +3,7 @@ entryticket_cost = 30
 student_dict = {}
 accepted = []
 rejected = []
-run_time = 1
+run_time = 0
 
 def cost(num):
     global total_cost
@@ -22,19 +22,22 @@ def profit():
         print('a loss of',-difference,'is found')
 
 def main():
+    global run_time, costper_student
     while True:
         try:
             student_count = int(input('enter the number of student who wish to go to the school trip : '))
             if student_count > 45:
                 print('max students allowed is 45')
                 continue
+            else:
+                break
         except:
             print('please enter a valid integer value')
             continue
     costper_student = cost(student_count)
     print('each student must pay a total of ',costper_student)
     while True:
-        name = input('enter student '+str(i+1)+' name:  ')
+        name = input('enter student '+str(run_time+1)+' name:  ')
         if name in student_dict:
             print(name,'has already been entered, please enter next student')
             continue
@@ -48,21 +51,25 @@ def main():
                 pay = 'pending'
                 rejected.append(name)
             student_dict[name]=pay
-
-    for k,v in student_dict:
-        print('student name:',k,'\npayement status:',v,'\n')
+            if run_time == student_count:
+                break
+    for k in student_dict:
+        print('student name:',k,'\npayement status:',student_dict[k],'\n')
 
 
     print('the students who have paid and will be going to the trip are : ')
     for i in accepted:
         print(i)
     else:
-        print('-'*30)
+        print('-'*100)
     print('the students who havent paid yet are :')
     for i in rejected:
         print(i)
     else:
-        print('-'*30)
+        print('-'*100)
 
     profit()
+
+
+
 main()
