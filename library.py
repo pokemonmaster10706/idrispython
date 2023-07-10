@@ -94,7 +94,7 @@ def books():
         choice = int(input('Enter Choice: '))
         if choice == 1:
             name = input('\nEnter Book Name: ')
-            cur_mod.execute('update customers set Bookname = "%s" where CustID = "%s"'%(name,custid))
+            cur_mod.execute('update customers set Book_name = "%s" where CustID = "%s"'%(name,custid))
         elif choice == 2:
             auth = input('\nEnter Author: ')
             cur_mod.execute('update customers set Date_of_birth = "%s" where CustID = "%s"'%(dob,custid))
