@@ -134,11 +134,12 @@ def signup_button():
                 user_error_label.destroy()
                 user_error_label=CTkLabel(master=signframe, text="Username cannot contain spaces", font=('Dubai', 12), text_color='Red')
 
-            user_error_label.place(x=35,y=98)
+            user_error_label.place(x=45,y=98)
 
         if user_check is True:
             user_error_label.destroy()
             user_error_label=CTkLabel(master=signframe, text="Username accepted.", font=('Dubai', 12), text_color='Green')
+            user_check = True
 
         user_error_label.place(x=45,y=98)
 
