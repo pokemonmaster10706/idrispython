@@ -1,17 +1,8 @@
-l1=[]
-l2 = []
-l3 = []
+num = input('enter three numbers separated by spaces: ')
+numl = num.split()
 
-n = int(input('enter amount of strings you would like to add : '))
-for i in range (n):
-    a = input('enter element for list one: ')
-    l1.append(a)
-for i in l1:
-    if len(i) not in l2:
-        l2.append(len(i))
-l2.sort()
-for i in l2:
-    for j in l1:
-        if i == len(j):
-            l3.append(j)
-print(l3)
+a = int(numl[0])
+b = int(numl[1])
+x = int(numl[2])
+y=a*x+b
+print(y)
