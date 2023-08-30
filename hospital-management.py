@@ -1,7 +1,7 @@
 #import tkinter as tk
 import pwinput
 import customtkinter as ctk
-from customtkinter import *
+from customtkinter import *    #importing all libraries as part of python itself(no longer need to call customtkinter)
 from PIL import ImageTk, Image
 from colorama import Fore
 import mysql.connector as msconn
@@ -34,7 +34,7 @@ def check_database():
         sqldb.close()
         sqlcon = msconn.connect(host = 'localhost', user = 'root', passwd = '%s'%(passw,), database = 'Hospital')
         cur2 = sqlcon.cursor()
-        cur2.execute('create table Login(username varchar(20) primary key,password varchar(20) not null, phone_number int(10) unique not null)')
+        cur2.execute('create table Login(username varchar(20) primary key,password varchar(20) not null, phone_number int(10) unique not null, admin char(1) default "n")')
         cur2.execute('create table Staff(Staff_ID int(10) primary key ,Name varchar(30) not null ,Age int(3) ,Gender char(1) not null ,Address varchar(50) not null ,Category varchar(30) not null ,Date_Of_Join date not null ,Salary decimal(10,2) Not null )')
         cur2.execute('create table Doctors(ID varchar(15) primary key, Staff_ID int(10) unique not null, Department varchar(50) not null, constraint staffkey foreign key(Staff_ID) references staff(Staff_ID))')
         cur2.execute('create table Rooms(Room_NO int(7) primary key, Type varchar(30) not null, Capacity int(2) not null, Available_Beds int(2) not null, Class varchar(10))')
@@ -52,10 +52,84 @@ def check_database():
         sqldb.close()
         sqlcon = msconn.connect(host = 'localhost', user = 'root', passwd = '%s'%(passw,), database = 'Hospital')
 
+#----------------------------------------------------↓↓↓↓↓password checking function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
+
+def password(passentry,repassentry,frame,yaxis,xaxis = 45):
+    global passwrd_check, pass_error_label, paswrd
+
+    paswrd = passentry.get()
+    repas = repassentry.get()
+
+    passwrd_check = False
+
+    length_check = False
+    nmbr_check = False
+    upper_check = False
+
+    spl = '`\~!@\#$%^&*()_-+={[:;\\\'\"<>,.?/]}'
+    spl_check = False
+
+
+    if len(paswrd) > 7:
+        length_check = True
+
+    for i in paswrd:
+
+        if i.isdigit():
+            nmbr_check = True
+            continue
+
+        else:
+
+            if i in spl:
+                spl_check = True
+                continue
+
+            else:
+
+                if i.isupper():
+                    upper_check = True
+                    continue
+
+                else:
+                    continue
+
+    if length_check == spl_check == nmbr_check == upper_check == True and paswrd == repas:
+        passwrd_check = True
+        pass_error_label.destroy()
+        pass_error_label=CTkLabel(master=frame, text="Password accepted", font=('Dubai', 12), text_color='Green', height=1)
+        pass_error_label.place(x=xaxis,y=yaxis)
+
+
+    else:
+
+        if length_check is False:
+            pass_error_label.destroy()
+            pass_error_label=CTkLabel(master=frame, text="Invalid password. Must have 8 or more characters", font=('Dubai', 12), text_color='Red', height=1)
+
+        elif upper_check is False:
+            pass_error_label.destroy()
+            pass_error_label=CTkLabel(master=frame, text="Invalid password. Must include an upper case letter", font=('Dubai', 12), text_color='Red', height=1)
+
+        elif nmbr_check is False:
+            pass_error_label.destroy()
+            pass_error_label=CTkLabel(master=frame, text="Invalid password. Must include a number", font=('Dubai', 12), text_color='Red', height=1)
+
+        elif spl_check is False:
+            pass_error_label.destroy()
+            pass_error_label=CTkLabel(master=frame, text="Invalid password. Must include a special character", font=('Dubai', 12), text_color='Red', height=1)
+
+        elif paswrd != repas:
+            pass_error_label.destroy()
+            pass_error_label=CTkLabel(master=frame, text="Passwords do not match", font=('Dubai', 12), text_color='Red', height=1)
+
+        pass_error_label.place(x=xaxis,y=yaxis)
+
+
 #----------------------------------------------------↓↓↓↓↓signup button function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
-def signup_button():
-    global pass_error_label, user_error_label, mob_error_label
+def adsignup_button():
+    global pass_error_label, user_error_label, mob_error_label, passwrd_check
 
 
     username = userentry.get()
@@ -67,7 +141,6 @@ def signup_button():
     if user_exist == []:
 
         user_check = False
-        pass_check = False
         mob_check = False
 
         space_check = False
@@ -116,37 +189,90 @@ def signup_button():
 
             if length_check is False:
                 user_error_label.destroy()
-                user_error_label=CTkLabel(master=signframe, text="Invalid username. Must have 8 or more characters", font=('Dubai', 12), text_color='Red')
+                user_error_label=CTkLabel(master=adminsignframe, text="Invalid username. Must have 8 or more characters", font=('Dubai', 12), text_color='Red', height=1)
 
             elif upper_check is False:
                 user_error_label.destroy()
-                user_error_label=CTkLabel(master=signframe, text="Invalid username. Must include an upper case letter", font=('Dubai', 12), text_color='Red')
+                user_error_label=CTkLabel(master=adminsignframe, text="Invalid username. Must include an upper case letter", font=('Dubai', 12), text_color='Red', height=1)
 
             elif nmbr_check is False:
                 user_error_label.destroy()
-                user_error_label=CTkLabel(master=signframe, text="Invalid username. Must include a number", font=('Dubai', 12), text_color='Red')
+                user_error_label=CTkLabel(master=adminsignframe, text="Invalid username. Must include a number", font=('Dubai', 12), text_color='Red', height=1)
 
             elif spl_check is False:
                 user_error_label.destroy()
-                user_error_label=CTkLabel(master=signframe, text="Invalid username. Must include a special character", font=('Dubai', 12), text_color='Red')
+                user_error_label=CTkLabel(master=adminsignframe, text="Invalid username. Must include a special character", font=('Dubai', 12), text_color='Red', height=1)
 
             elif ' ' in username:
                 user_error_label.destroy()
-                user_error_label=CTkLabel(master=signframe, text="Username cannot contain spaces", font=('Dubai', 12), text_color='Red')
+                user_error_label=CTkLabel(master=adminsignframe, text="Username cannot contain spaces", font=('Dubai', 12), text_color='Red', height=1)
 
             user_error_label.place(x=45,y=98)
 
         if user_check is True:
             user_error_label.destroy()
-            user_error_label=CTkLabel(master=signframe, text="Username accepted.", font=('Dubai', 12), text_color='Green')
+            user_error_label=CTkLabel(master=adminsignframe, text="Username accepted.", font=('Dubai', 12), text_color='Green', height=1)
             user_check = True
 
         user_error_label.place(x=45,y=98)
 
+        password(passentry,repassentry,adminsignframe,200)
 
-        paswrd = passentry.get()
-        repas = repassentry.get()
+        mob_no = phone_entry.get()
+        length_check = False
+        nmbr_check = False
 
+        if len(str(mob_no)) != 10:
+            mob_error_label.destroy()
+            mob_error_label=CTkLabel(master=adminsignframe, text="Phone number not valid, Please recheck", font=('Dubai', 12), text_color='Red', height=1)
+
+        else:
+            length_check = True
+            for i in mob_no:
+                if i.isdigit() == False:
+                    mob_error_label.destroy()
+                    mob_error_label=CTkLabel(master=adminsignframe, text="Phone number can only contain numbers", font=('Dubai', 12), text_color='Red', height=1)
+                else:
+                    nmbr_check = True
+
+        if length_check == nmbr_check is True:
+            mob_check = True
+
+        mob_error_label.place(x=45,y=260)
+
+
+
+        if passwrd_check == user_check == mob_check is True:
+            signup_cur.execute("insert into login values('%s','%s',%s,'y')"%(username,paswrd,mob_no))
+            sqlcon.commit()
+            signup_cur.close()
+            log.destroy()
+            adminlog()
+
+    else:
+        user_error_label.destroy()
+        user_error_label=CTkLabel(master=adminsignframe, text="Sorry, This username is already in use.", font=('Dubai', 12), text_color='Red', height=1)
+        user_error_label.place(x=45,y=98)
+
+
+#----------------------------------------------------↓↓↓↓↓signup button function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
+
+def signup_button():
+    global pass_error_label, user_error_label, mob_error_label, passwrd_check
+
+
+    username = userentry.get()
+    signup_cur = sqlcon.cursor()
+
+    signup_cur.execute('select * from login where username = "%s"'%(username))
+    user_exist = signup_cur.fetchall()
+
+    if user_exist == []:
+
+        user_check = False
+        mob_check = False
+
+        space_check = False
         length_check = False
         nmbr_check = False
         upper_check = False
@@ -155,10 +281,10 @@ def signup_button():
         spl_check = False
 
 
-        if len(paswrd) > 7:
+        if len(username) > 7:
             length_check = True
 
-        for i in paswrd:
+        for i in username:
 
             if i.isdigit():
                 nmbr_check = True
@@ -179,32 +305,47 @@ def signup_button():
                     else:
                         continue
 
-        if length_check == spl_check == nmbr_check == upper_check == True and paswrd == repas:
-            pass_check = True
+        if ' ' in username:
+            space_check = False
+
+        else:
+            space_check = True
+
+        if length_check == spl_check == nmbr_check == upper_check == space_check == True:
+            user_check = True
 
         else:
 
             if length_check is False:
-                pass_error_label.destroy()
-                pass_error_label=CTkLabel(master=signframe, text="Invalid password. Must have 8 or more characters", font=('Dubai', 12), text_color='Red')
+                user_error_label.destroy()
+                user_error_label=CTkLabel(master=signframe, text="Invalid username. Must have 8 or more characters", font=('Dubai', 12), text_color='Red', height=1)
 
             elif upper_check is False:
-                pass_error_label.destroy()
-                pass_error_label=CTkLabel(master=signframe, text="Invalid password. Must include an upper case letter", font=('Dubai', 12), text_color='Red')
+                user_error_label.destroy()
+                user_error_label=CTkLabel(master=signframe, text="Invalid username. Must include an upper case letter", font=('Dubai', 12), text_color='Red', height=1)
 
             elif nmbr_check is False:
-                pass_error_label.destroy()
-                pass_error_label=CTkLabel(master=signframe, text="Invalid password. Must include a number", font=('Dubai', 12), text_color='Red')
+                user_error_label.destroy()
+                user_error_label=CTkLabel(master=signframe, text="Invalid username. Must include a number", font=('Dubai', 12), text_color='Red', height=1)
 
             elif spl_check is False:
-                pass_error_label.destroy()
-                pass_error_label=CTkLabel(master=signframe, text="Invalid password. Must include a special character", font=('Dubai', 12), text_color='Red')
+                user_error_label.destroy()
+                user_error_label=CTkLabel(master=signframe, text="Invalid username. Must include a special character", font=('Dubai', 12), text_color='Red', height=1)
 
-            elif paswrd != repas:
-                pass_error_label.destroy()
-                pass_error_label=CTkLabel(master=signframe, text="Passwords do not match", font=('Dubai', 12), text_color='Red')
+            elif ' ' in username:
+                user_error_label.destroy()
+                user_error_label=CTkLabel(master=signframe, text="Username cannot contain spaces", font=('Dubai', 12), text_color='Red', height=1)
 
-            pass_error_label.place(x=45,y=200)
+            user_error_label.place(x=45,y=98)
+
+        if user_check is True:
+            user_error_label.destroy()
+            user_error_label=CTkLabel(master=signframe, text="Username accepted.", font=('Dubai', 12), text_color='Green', height=1)
+            user_check = True
+
+        user_error_label.place(x=45,y=98)
+
+        password(passentry,repassentry,signframe,200)
 
         mob_no = phone_entry.get()
         length_check = False
@@ -212,14 +353,15 @@ def signup_button():
 
         if len(str(mob_no)) != 10:
             mob_error_label.destroy()
-            mob_error_label=CTkLabel(master=signframe, text="Phone number not valid, Please recheck", font=('Dubai', 12), text_color='Red')
-            length_check = True
+            mob_error_label=CTkLabel(master=signframe, text="Phone number not valid, Please recheck", font=('Dubai', 12), text_color='Red', height=1)
 
         else:
+            length_check = True
             for i in mob_no:
                 if i.isdigit() == False:
                     mob_error_label.destroy()
-                    mob_error_label=CTkLabel(master=signframe, text="Phone number can only contain numbers", font=('Dubai', 12), text_color='Red')
+                    mob_error_label=CTkLabel(master=signframe, text="Phone number can only contain numbers", font=('Dubai', 12), text_color='Red', height=1)
+                else:
                     nmbr_check = True
 
         if length_check == nmbr_check is True:
@@ -229,8 +371,8 @@ def signup_button():
 
 
 
-        if pass_check == user_check == mob_check is True:
-            signup_cur.execute("insert into login values('%s','%s',%s)"%(username,paswrd,mob_no))
+        if passwrd_check == user_check == mob_check is True:
+            signup_cur.execute("insert into login values('%s','%s',%s,'n')"%(username,paswrd,mob_no))
             sqlcon.commit()
             signup_cur.close()
             log.destroy()
@@ -238,8 +380,53 @@ def signup_button():
 
     else:
         user_error_label.destroy()
-        user_error_label=CTkLabel(master=signframe, text="Sorry, This username is already in use.", font=('Dubai', 12), text_color='Red')
+        user_error_label=CTkLabel(master=signframe, text="Sorry, This username is already in use.", font=('Dubai', 12), text_color='Red', height=1)
         user_error_label.place(x=45,y=98)
+
+#----------------------------------------------------↓↓↓↓↓admin login button function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
+
+def adlogin_button():
+    global user_error_label, pass_error_label
+
+    username = userentry.get()
+    paswrd = passentry.get()
+
+
+    log_cur = sqlcon.cursor()
+    log_cur.execute('select * from login where username = "%s"'%(username))
+    user_pass = log_cur.fetchall()
+
+#    print(user_pass)      #for debugging
+
+    if user_pass != []:
+
+        if user_pass[0][1] == paswrd:
+            if user_pass[0][3] == 'y':
+                user_error_label.destroy()
+                pass_error_label.destroy()
+                enter_label=CTkLabel(master=adminlogframe, text="Welcome", font=('Dubai', 12), text_color='Lime')
+                enter_label.place(x=45,y=137)
+                log.after(1000,log.destroy())
+                ad_home_page()
+            else:
+                user_error_label.destroy()
+                pass_error_label.destroy()
+                pass_error_label=CTkLabel(master=adminlogframe, text="Not an admin account", font=('Dubai', 12), text_color='Red', height=1)
+                pass_error_label.place(x=45,y=193)
+
+
+        else:
+            user_error_label.destroy()
+            pass_error_label.destroy()
+            pass_error_label=CTkLabel(master=adminlogframe, text="Incorrect password", font=('Dubai', 12), text_color='Red', height=1)
+            pass_error_label.place(x=45,y=193)
+
+    else:
+        pass_error_label.destroy()
+        user_error_label.destroy()
+        user_error_label=CTkLabel(master=adminlogframe, text="Account does not exist", font=('Dubai', 12), text_color='Red', height=1)
+        user_error_label.place(x=45,y=137)
+
 
 #----------------------------------------------------↓↓↓↓↓login button function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
@@ -248,6 +435,10 @@ def login_button():
 
     username = userentry.get()
     paswrd = passentry.get()
+
+    if username == 'Admin.user' and paswrd == 'Admin.pass':
+        adminlog()
+
 
     log_cur = sqlcon.cursor()
     log_cur.execute('select * from login where username = "%s"'%(username))
@@ -268,100 +459,193 @@ def login_button():
         else:
             user_error_label.destroy()
             pass_error_label.destroy()
-            pass_error_label=CTkLabel(master=logframe, text="Incorrect password", font=('Dubai', 12), text_color='Red')
+            pass_error_label=CTkLabel(master=logframe, text="Incorrect password", font=('Dubai', 12), text_color='Red', height=1)
             pass_error_label.place(x=45,y=193)
 
     else:
         pass_error_label.destroy()
         user_error_label.destroy()
-        user_error_label=CTkLabel(master=logframe, text="Account does not exist", font=('Dubai', 12), text_color='Red')
+        user_error_label=CTkLabel(master=logframe, text="Account does not exist", font=('Dubai', 12), text_color='Red', height=1)
         user_error_label.place(x=45,y=137)
 
 #----------------------------------------------------↓↓↓↓↓change password function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
 def chngpass():
+    global mobentry, passentry, repassentry, mob_error_label, frgtframe, user_error_label, pass_error_label
+
     mob = mobentry.get()
-    mobcur = msconn.cursor()
-    mobcur.execute('select * from login where phone_number = %s'%(mob))
-    acc = mobcur.fetchall()
+    if mob.isdigit():
+        if len(mob)==10:
+            mobcur = sqlcon.cursor()
+            mobcur.execute('select * from login where phone_number = %s'%(mob))
+            acc = mobcur.fetchall()
 
-    if acc == []:
-        mob_error_label.destroy()
-        mob_error_label=CTkLabel(master=logframe, text="Mobile number not registered", font=('Dubai', 12), text_color='Red')
-        mob_error_label.place(x=45,y=135)
+            if acc == []:
+                mob_error_label.destroy()
+                mob_error_label=CTkLabel(master=frgtframe, text="Mobile number not registered", font=('Dubai', 12), text_color='Red', height=1)
+                mob_error_label.place(x=45,y=130)
 
+            else:
+                mob_error_label.destroy()
+                mob_error_label=CTkLabel(master=frgtframe, text="Mobile number accepted", font=('Dubai', 12), text_color='Green', height=1)
+                mob_error_label.place(x=45,y=130)
+
+                username = userentry.get()
+                if acc[0][0] == username:
+                    user_error_label.destroy()
+                    user_error_label=CTkLabel(master=frgtframe, text="Username accepted", font=('Dubai', 12), text_color='Green', height=1)
+                    user_error_label.place(x=45,y=180)
+
+                    password(passentry,repassentry,frgtframe,257)
+                    if passwrd_check is True:
+                        print(Fore.WHITE + paswrd)
+                        mobcur.execute('update login set password = "%s" where phone_number = "%s"'%(paswrd,mob))
+                        sqlcon.commit()
+                        mobcur.close()
+                        switchlog()
+
+                else:
+                    user_error_label.destroy()
+                    user_error_label=CTkLabel(master=frgtframe, text="Username not registered with this number", font=('Dubai', 12), text_color='Red', height=1)
+                    user_error_label.place(x=45,y=180)
     else:
         mob_error_label.destroy()
-        mob_error_label=CTkLabel(master=logframe, text="Mobile number accepted", font=('Dubai', 12), text_color='Green')
-        mob_error_label.place(x=45,y=135)
-
-        username = userentry.get()
-        if acc[0][0] == username:
-            user_error_label.destroy()
-            user_error_label=CTkLabel(master=logframe, text="Username accepted", font=('Dubai', 12), text_color='Green')
-            user_error_label.place(x=45,y=135)
-
-            password = passentry.get()
-            repass = repassentry.get()
-
-            if password == repass:
-                mobcur.execute('update login set password = "%s" where phone_number = "%s"'%(password,mob))
-
-        else:
-            user_error_label.destroy()
-            user_error_label=CTkLabel(master=logframe, text="Username not registered with this number", font=('Dubai', 12), text_color='Red')
-            user_error_label.place(x=45,y=135)
-
+        mob_error_label=CTkLabel(master=frgtframe, text="Mobile number not valid", font=('Dubai', 12), text_color='Green', height=1)
+        mob_error_label.place(x=45,y=130)
 
 #----------------------------------------------------↓↓↓↓↓login / signup window creation↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
 
 def login_win():
-    global log , logbg, logframe, pass_error_label, user_error_label, mob_error_label
+    global log , logbg, logframe, adminlogframe, pass_error_label, user_error_label, mob_error_label, mobentry, passentry, repassentry, switchlog, switchsignup, switchfrgt, adminlog
+
+    #----------------------------------------------------↓↓↓↓↓admin login frame↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
+
+    def adminlog():
+        global userentry, passentry, adminlogframe, pass_error_label, user_error_label
+
+        adminlogframe = CTkFrame(master=logbg, width=320, height=360, corner_radius=15)
+        adminlogframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+
+        loglabel=CTkLabel(master=adminlogframe, text="Admin login", font=('Dubai', 20))
+        loglabel.place(x=50,y=45)
+
+        userentry=CTkEntry (master=adminlogframe, width=220, placeholder_text="Username")
+        userentry.place(x=50, y=110)
+
+        passentry=CTkEntry (master=adminlogframe, width=220, placeholder_text="Password")
+        passentry.place(x=50, y=165)
+
+        frgtpasbutton=CTkButton (master=adminlogframe, text="Not an admin?", width=100, height=20, corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:switchlog())
+        frgtpasbutton.place(x=170,y=195)
+
+        pass_error_label=CTkLabel(master=adminlogframe, text="")
+        pass_error_label.place(x=45,y=192)
+
+        user_error_label=CTkLabel(master=adminlogframe, text="")
+        user_error_label.place(x=45,y=135)
+
+        logbutton=CTkButton(master=adminlogframe, width=220, text='Login', corner_radius=6, command=lambda:adlogin_button())
+        logbutton.place(x=50,y=240)
+
+#        googlelogo=CTkImage(Image.open("google.png").resize((20,20), Image.Resampling.LANCZOS))
+#        fblogo=CTkImage(Image.open("facebook.png").resize((20,20), Image.Resampling.LANCZOS))
+#
+#        googlebutton=CTkButton(master=adminlogframe, image=googlelogo, text="Google", width=100, height=20, corner_radius=6, compound='left', text_color='Black', fg_color='White', hover_color='#A4A4A4')
+#        googlebutton.place(x=50,y=290)
+#
+#        fbbutton=CTkButton(master=adminlogframe, image=fblogo, text="Facebook", width=100, height=20, corner_radius=6, compound='left', text_color='Black', fg_color='White', hover_color='#A4A4A4')
+#        fbbutton.place(x=170,y=290)
+#
+        switchbutton=CTkButton(master=adminlogframe, width=220, text="Create admin account", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:adminsignup())
+        switchbutton.place(x=50,y=320)
+
+    #----------------------------------------------------↓↓↓↓↓signup frame↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
+
+    def adminsignup():
+        global repassentry, passentry, userentry, adminsignframe, pass_error_label, user_error_label, phone_entry, mob_error_label
+
+        log.title('ADMIN SIGNUP')
+
+        adminsignframe = CTkFrame(master=logbg, width=320, height=360, corner_radius=15)
+        adminsignframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+
+        signlabel=CTkLabel(master=adminsignframe, text="Admin signup", font=('Dubai', 20))
+        signlabel.place(x=50,y=20)
+
+        userentry=CTkEntry (master=adminsignframe, width=220, placeholder_text="Username")
+        userentry.place(x=50, y=70)
+
+        passentry=CTkEntry (master=adminsignframe, width=220, placeholder_text="Password")
+        passentry.place(x=50, y=130)
+
+        repassentry=CTkEntry (master=adminsignframe, width=220, placeholder_text="Repeat Password")
+        repassentry.place(x=50, y=165)
+
+        phone_entry=CTkEntry (master=adminsignframe, width=220, placeholder_text="Phone Number")
+        phone_entry.place(x=50, y=230)
+
+        user_error_label=CTkLabel(master=adminsignframe, text="")
+        user_error_label.place(x=45,y=88)
+
+        pass_error_label=CTkLabel(master=adminsignframe, text="")
+        pass_error_label.place(x=45,y=190)
+
+        mob_error_label=CTkLabel(master=adminsignframe, text="")
+        mob_error_label.place(x=45,y=128)
+
+        signbutton=CTkButton(master=adminsignframe, width=220, text='Sign up', corner_radius=6, command=lambda:adsignup_button())
+        signbutton.place(x=50,y=280)
+
+        switchbutton=CTkButton(master=adminsignframe, width=220, text="Login as admin", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:adminlog())
+        switchbutton.place(x=50,y=320)
+
 
     #----------------------------------------------------↓↓↓↓↓forgot password frame↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
     def switchfrgt():
-        global userentry, passentry, logframe, pass_error_label, user_error_label
+        global userentry, passentry, repassentry, logframe, frgtframe, mobentry, pass_error_label, user_error_label, mob_error_label
 
         frgtframe = CTkFrame(master=logbg, width=320, height=360, corner_radius=15)
         frgtframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
-        frgtlabel=CTkLabel(master=logframe, text="Change your password", font=('Dubai', 20))
+        frgtlabel=CTkLabel(master=frgtframe, text="Change your password", font=('Dubai', 20))
         frgtlabel.place(x=50,y=45)
 
-        mobentry=CTkEntry (master=logframe, width=220, placeholder_text="Mobile number")
-        mobentry.place(x=50, y=110)
+        mobentry=CTkEntry (master=frgtframe, width=220, placeholder_text="Mobile number")
+        mobentry.place(x=50, y=100)
 
-        userentry=CTkEntry (master=logframe, width=220, placeholder_text="Username")
-        userentry.place(x=50, y=110)
+        userentry=CTkEntry (master=frgtframe, width=220, placeholder_text="Username")
+        userentry.place(x=50, y=150)
 
-        passentry=CTkEntry (master=logframe, width=220, placeholder_text="New password")
-        passentry.place(x=50, y=165)
+        passentry=CTkEntry (master=frgtframe, width=220, placeholder_text="New password")
+        passentry.place(x=50, y=200)
 
-        repassentry=CTkEntry (master=logframe, width=220, placeholder_text="Repeat password")
-        repassentry.place(x=50, y=165)
+        repassentry=CTkEntry (master=frgtframe, width=220, placeholder_text="Repeat password")
+        repassentry.place(x=50, y=230)
 
-        user_error_label=CTkLabel(master=logframe, text="")
+        user_error_label=CTkLabel(master=frgtframe, text="")
         user_error_label.place(x=45,y=135)
 
-        pass_error_label=CTkLabel(master=logframe, text="")
+        pass_error_label=CTkLabel(master=frgtframe, text="")
         pass_error_label.place(x=45,y=192)
 
-        mob_error_label=CTkLabel(master=logframe, text="")
-        mob_error_label.place(x=45,y=135)
+        mob_error_label=CTkLabel(master=frgtframe, text="")
+        mob_error_label.place(x=45,y=230)
 
-        chngbutton=CTkButton(master=logframe, width=220, text='Change password', corner_radius=6, command=lambda:chngpass())
-        chngbutton.place(x=50,y=240)
+        chngbutton=CTkButton(master=frgtframe, width=220, text='Change password', corner_radius=6, command=lambda:chngpass())
+        chngbutton.place(x=50,y=280)
 
-        switchbutton=CTkButton(master=signframe, width=220, text="Already have an account? Login.", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:switchlog())
-        switchbutton.place(x=50,y=325)
+        switchbutton=CTkButton(master=frgtframe, width=100, text="← back to login page", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:switchlog())
+        switchbutton.place(x=50,y=320)
 
 
     #----------------------------------------------------↓↓↓↓↓login frame↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
     def switchlog():
         global userentry, passentry, logframe, pass_error_label, user_error_label
+
+        log.title('LOGIN')
 
         logframe = CTkFrame(master=logbg, width=320, height=360, corner_radius=15)
         logframe.place(relx=0.5,rely=0.5,anchor=CENTER)
@@ -387,15 +671,15 @@ def login_win():
         logbutton=CTkButton(master=logframe, width=220, text='Login', corner_radius=6, command=lambda:login_button())
         logbutton.place(x=50,y=240)
 
-        googlelogo=CTkImage(Image.open("google.png").resize((20,20), Image.Resampling.LANCZOS))
-        fblogo=CTkImage(Image.open("facebook.png").resize((20,20), Image.Resampling.LANCZOS))
-
-        googlebutton=CTkButton(master=logframe, image=googlelogo, text="Google", width=100, height=20, corner_radius=6, compound='left', text_color='Black', fg_color='White', hover_color='#A4A4A4')
-        googlebutton.place(x=50,y=290)
-
-        fbbutton=CTkButton(master=logframe, image=fblogo, text="Facebook", width=100, height=20, corner_radius=6, compound='left', text_color='Black', fg_color='White', hover_color='#A4A4A4')
-        fbbutton.place(x=170,y=290)
-
+#        googlelogo=CTkImage(Image.open("google.png").resize((20,20), Image.Resampling.LANCZOS))
+#        fblogo=CTkImage(Image.open("facebook.png").resize((20,20), Image.Resampling.LANCZOS))
+#
+#        googlebutton=CTkButton(master=logframe, image=googlelogo, text="Google", width=100, height=20, corner_radius=6, compound='left', text_color='Black', fg_color='White', hover_color='#A4A4A4')
+#        googlebutton.place(x=50,y=290)
+#
+#        fbbutton=CTkButton(master=logframe, image=fblogo, text="Facebook", width=100, height=20, corner_radius=6, compound='left', text_color='Black', fg_color='White', hover_color='#A4A4A4')
+#        fbbutton.place(x=170,y=290)
+#
         switchbutton=CTkButton(master=logframe, width=220, text="Don't have an account? sign up.", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:switchsignup())
         switchbutton.place(x=50,y=320)
 
@@ -410,7 +694,7 @@ def login_win():
         signframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
         signlabel=CTkLabel(master=signframe, text="Create new account", font=('Dubai', 20))
-        signlabel.place(x=50,y=25)
+        signlabel.place(x=50,y=20)
 
         userentry=CTkEntry (master=signframe, width=220, placeholder_text="Username")
         userentry.place(x=50, y=70)
@@ -421,23 +705,23 @@ def login_win():
         repassentry=CTkEntry (master=signframe, width=220, placeholder_text="Repeat Password")
         repassentry.place(x=50, y=165)
 
-        user_error_label=CTkLabel(master=signframe, text="")
-        user_error_label.place(x=45,y=98)
-
-        pass_error_label=CTkLabel(master=signframe, text="")
-        pass_error_label.place(x=45,y=200)
-
-        mob_error_label=CTkLabel(master=signframe, text="")
-        mob_error_label.place(x=45,y=260)
-
         phone_entry=CTkEntry (master=signframe, width=220, placeholder_text="Phone Number")
         phone_entry.place(x=50, y=230)
 
+        user_error_label=CTkLabel(master=signframe, text="")
+        user_error_label.place(x=45,y=88)
+
+        pass_error_label=CTkLabel(master=signframe, text="")
+        pass_error_label.place(x=45,y=190)
+
+        mob_error_label=CTkLabel(master=signframe, text="")
+        mob_error_label.place(x=45,y=128)
+
         signbutton=CTkButton(master=signframe, width=220, text='Sign up', corner_radius=6, command=lambda:signup_button())
-        signbutton.place(x=50,y=290)
+        signbutton.place(x=50,y=280)
 
         switchbutton=CTkButton(master=signframe, width=220, text="Already have an account? Login.", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:switchlog())
-        switchbutton.place(x=50,y=325)
+        switchbutton.place(x=50,y=320)
 
     #--------------------------------------------------↓↓↓↓↓creating the login window↓↓↓↓↓-------------------------------------------------------
 
@@ -455,14 +739,39 @@ def login_win():
 
 #--------------------------------------------------↓↓↓↓↓creating the home page↓↓↓↓↓-------------------------------------------------------
 
+def detailspage():
+    detail_win = CTk()
+    detail_win.geometry('1280x720')
+    detail_win.title('Python Hospital')
+
+    detailimg = ImageTk.PhotoImage(Image.open('home-bg.jpg'))
+    detailbg = CTkLabel(master=detail_win, image=detailimg)
+    detailbg.pack()
+
+    detailframe = CTkFrame(master=detailbg, width=750, height=790, corner_radius=15)
+    detailframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+
+
+
+    detail_win.mainloop()
+
+
+#--------------------------------------------------↓↓↓↓↓creating the home page↓↓↓↓↓-------------------------------------------------------
+
 def home_page():
     home_win = CTk()
-    home_win.geometry('1280x720')
+    home_win.geometry('1280x800')
     home_win.title('Python Hospital')
+
+    home_win.eval('tk::PlaceWindow . center')
 
     homeimg = ImageTk.PhotoImage(Image.open('home-bg.jpg'))
     homebg = CTkLabel(master=home_win, image=homeimg)
     homebg.pack()
+
+    homeframe = CTkFrame(master=homebg, width=750, height=790, corner_radius=15)
+    homeframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+
 
     home_win.mainloop()
 
@@ -476,7 +785,8 @@ def main():
 
 if __name__ == '__main__':
     global passw
-    passw = pwinput.pwinput()
+    passw = 'idris7'
+#    passw = pwinput.pwinput()
 #    passw = input('Enter Password: ')
 #    print('\b'*(len(passw)+1))
     sqldb = msconn.connect(host = 'localhost', user = 'root', passwd = '%s'%(passw,))
