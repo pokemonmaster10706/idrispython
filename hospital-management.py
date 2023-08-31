@@ -254,7 +254,6 @@ def adsignup_button():
         user_error_label=CTkLabel(master=adminsignframe, text="Sorry, This username is already in use.", font=('Dubai', 12), text_color='Red', height=1)
         user_error_label.place(x=45,y=98)
 
-
 #----------------------------------------------------↓↓↓↓↓signup button function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
 def signup_button():

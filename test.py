@@ -3,6 +3,7 @@ import os
 from PIL import Image
 
 
+
 class ScrollableCheckBoxFrame(CTkScrollableFrame):
     def __init__(self, master, item_list, command=None, **kwargs):
         super().__init__(master, **kwargs)

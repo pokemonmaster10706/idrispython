@@ -9,6 +9,7 @@ import mysql.connector as msconn
 set_appearance_mode('dark')#can be changed to light
 set_default_color_theme('green')#can also be blue or dark-blue
 
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def test():
