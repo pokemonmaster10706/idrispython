@@ -690,11 +690,11 @@ def login_win():
 
         log.title('SIGNUP')
 
-        signframe = CTkFrame(master=logbg, width=320, height=300, corner_radius=15)
+        signframe = CTkFrame(master=logbg, width=320, height=360, corner_radius=15)
         signframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
         underframe = CTkScrollableFrame(master=signframe, width=280, height=200)
-        underframe.place(x=10,y=50)
+        underframe.place(relx=0.5,rely=0.4,anchor=CENTER)
 
         signlabel=CTkLabel(master=signframe, text="Create new account", font=('Dubai', 20))
         signlabel.place(x=50,y=10)
@@ -711,11 +711,14 @@ def login_win():
         phone_entry=CTkEntry (master=underframe, width=220, placeholder_text="Phone Number")
         phone_entry.pack(pady = 15)
 
+        emirates_entry=CTkEntry (master=underframe, width=220, placeholder_text="Emirates ID")
+        emirates_entry.pack(pady = 15)
+
         user_error_label=CTkLabel(master=underframe, text="sdfjksdkj")
         user_error_label.pack(pady = 15)
 
-        pass_error_label=CTkLabel(master=signframe, text="")
-        pass_error_label.place(x=45,y=190)
+        pass_error_label=CTkLabel(master=underframe, text="sdgsg")
+        pass_error_label.pack(pady = 15)
 
         mob_error_label=CTkLabel(master=signframe, text="")
         mob_error_label.place(x=45,y=128)
@@ -731,7 +734,7 @@ def login_win():
     log = CTk()
     log.geometry('600x440')
     log.title('LOGIN')
-
+#    logimg = ImageTk.PhotoImage(Image.open('pxfuel.png'))
     logimg = ImageTk.PhotoImage(Image.open('pxfuel.jpg'))
     logbg = CTkLabel(master=log, image=logimg)
     logbg.pack()
