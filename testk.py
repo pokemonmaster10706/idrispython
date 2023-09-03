@@ -5,6 +5,7 @@ from customtkinter import *    #importing all libraries as part of python itself
 from PIL import ImageTk, Image
 from colorama import Fore
 import mysql.connector as msconn
+import re
 
 set_appearance_mode('dark')#can be changed to light
 set_default_color_theme('green')#can also be blue or dark-blue
@@ -258,8 +259,8 @@ def adsignup_button():
 #----------------------------------------------------↓↓↓↓↓signup button function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
 
-def signup_button():
-    global pass_error_label, user_error_label, mob_error_label, passwrd_check
+def signup_button(xpass,xuser,xmob,xeid):
+    global pass_error_label, user_error_label, mob_error_label, EID_error_label, passwrd_check
 
 
     username = userentry.get()
@@ -337,16 +338,16 @@ def signup_button():
                 user_error_label.destroy()
                 user_error_label=CTkLabel(master=signframe, text="Username cannot contain spaces", font=('Dubai', 12), text_color='Red', height=1)
 
-            user_error_label.place(x=45,y=98)
+            user_error_label.place(x=45,y=xuser)
 
         if user_check is True:
             user_error_label.destroy()
             user_error_label=CTkLabel(master=signframe, text="Username accepted.", font=('Dubai', 12), text_color='Green', height=1)
             user_check = True
 
-        user_error_label.place(x=45,y=98)
+        user_error_label.place(x=45,y=xuser)
 
-        password(passentry,repassentry,signframe,200)
+        password(passentry,repassentry,signframe,xpass)
 
         mob_no = phone_entry.get()
         length_check = False
@@ -363,17 +364,42 @@ def signup_button():
                     mob_error_label.destroy()
                     mob_error_label=CTkLabel(master=signframe, text="Phone number can only contain numbers", font=('Dubai', 12), text_color='Red', height=1)
                 else:
+                    mob_error_label.destroy()
+                    mob_error_label=CTkLabel(master=signframe, text="Phone number accepted", font=('Dubai', 12), text_color='Green', height=1)
                     nmbr_check = True
 
         if length_check == nmbr_check is True:
             mob_check = True
 
-        mob_error_label.place(x=45,y=260)
+        mob_error_label.place(x=45,y=xmob)
 
+        emirates_id = EID_entry.get()
+        pattern = re.compile(r'^\d{3}-?\d{4}-?\d{7}-?\d$')
 
+        EID_check = False
+        signup_cur.execute('select * from login where Emirates_ID = "%s"'%(emirates_id))
+        EID_exists = signup_cur.fetchall()
 
-        if passwrd_check == user_check == mob_check is True:
-            signup_cur.execute("insert into login values('%s','%s',%s,'n')"%(username,paswrd,mob_no))
+        if pattern.match(emirates_id) and emirates_id[0:3] == '784':
+
+            if EID_exists == []:
+                EID_error_label.destroy()
+                EID_error_label=CTkLabel(master=signframe, text="Emirates ID accepted", font=('Dubai', 12), text_color='Green', height=1)
+                EID_check = True
+                EID_error_label.place(x=45,y=xeid)
+
+            else:
+                EID_error_label.destroy()
+                EID_error_label=CTkLabel(master=signframe, text="Emirates ID already registered", font=('Dubai', 12), text_color='Red', height=1)
+                EID_error_label.place(x=45,y=xeid)
+
+        else:
+            EID_error_label.destroy()
+            EID_error_label=CTkLabel(master=signframe, text="Emirates ID Invalid", font=('Dubai', 12), text_color='Red', height=1)
+            EID_error_label.place(x=45,y=xeid)
+
+        if passwrd_check == user_check == mob_check == EID_check is True:
+            signup_cur.execute("insert into login values('%s','%s','%s',%s,'n')"%(emirates_id,username,paswrd,mob_no))
             sqlcon.commit()
             signup_cur.close()
             log.destroy()
@@ -382,7 +408,7 @@ def signup_button():
     else:
         user_error_label.destroy()
         user_error_label=CTkLabel(master=signframe, text="Sorry, This username is already in use.", font=('Dubai', 12), text_color='Red', height=1)
-        user_error_label.place(x=45,y=98)
+        user_error_label.place(x=45,y=xuser)
 
 #----------------------------------------------------↓↓↓↓↓admin login button function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
@@ -687,11 +713,11 @@ def login_win():
     #----------------------------------------------------↓↓↓↓↓signup frame↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
     def switchsignup():
-        global repassentry, passentry, userentry, signframe, pass_error_label, user_error_label, phone_entry, mob_error_label
+        global repassentry, passentry, userentry, signframe,EID_entry, EID_error_label, pass_error_label, user_error_label, phone_entry, mob_error_label
 
         log.title('SIGNUP')
 
-        signframe = CTkFrame(master=logbg, width=320, height=360, corner_radius=15)
+        signframe = CTkFrame(master=logbg, width=320, height=450, corner_radius=15)
         signframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
         signlabel=CTkLabel(master=signframe, text="Create new account", font=('Dubai', 20))
@@ -707,22 +733,35 @@ def login_win():
         repassentry.place(x=50, y=165)
 
         phone_entry=CTkEntry (master=signframe, width=220, placeholder_text="Phone Number")
-        phone_entry.place(x=50, y=230)
+        phone_entry.place(x=50, y=225)
 
-        user_error_label=CTkLabel(master=signframe, text="")
-        user_error_label.place(x=45,y=88)
+        EID_entry=CTkEntry (master=signframe, width=220, placeholder_text="Emirates ID")
+        EID_entry.place(x=50, y=285)
 
-        pass_error_label=CTkLabel(master=signframe, text="")
-        pass_error_label.place(x=45,y=190)
+        user_error_label=CTkLabel(master=signframe, text="", height=1)
+        user_error_label.place(x=45,y=105)
 
-        mob_error_label=CTkLabel(master=signframe, text="")
-        mob_error_label.place(x=45,y=128)
+        pass_error_label=CTkLabel(master=signframe, text="", height=1)
+        pass_error_label.place(x=45,y=200)
 
-        signbutton=CTkButton(master=signframe, width=220, text='Sign up', corner_radius=6, command=lambda:signup_button())
-        signbutton.place(x=50,y=280)
+        mob_error_label=CTkLabel(master=signframe, text="", height=1)
+        mob_error_label.place(x=45,y=260)
 
-        switchbutton=CTkButton(master=signframe, width=220, text="Already have an account? Login.", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:switchlog())
-        switchbutton.place(x=50,y=320)
+        EID_error_label=CTkLabel(master=signframe, text="", height=1)
+        EID_error_label.place(x=45,y=320)
+
+        testlabel=CTkLabel(master=signframe, text="", height=1)
+        testlabel.place(x=45,y=400)
+
+        signbutton=CTkButton(master=signframe, width=220, text='Sign up', corner_radius=6, command=lambda:signup_button(xpass=200,xuser=105,xmob=260,xeid=320))
+        signbutton.place(x=50,y=350)
+
+        def del_frame():
+            signframe.destroy()
+            switchlog()
+
+        switchbutton=CTkButton(master=signframe, width=220, text="Already have an account? Login.", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:del_frame())
+        switchbutton.place(x=50,y=410)
 
     #--------------------------------------------------↓↓↓↓↓creating the login window↓↓↓↓↓-------------------------------------------------------
 
@@ -734,20 +773,20 @@ def login_win():
     logbg = CTkLabel(master=log, image=logimg)
     logbg.pack()
 
-'''    def center_window(window):
-        window.update_idletasks()
-        width = window.winfo_width()
-        height = window.winfo_height()
-        x_offset = (window.winfo_screenwidth() - width) // 2
-        y_offset = (window.winfo_screenheight() - height) // 2
-        window.geometry(f"{width}x{height}+{x_offset}+{y_offset}")
-
-    center_window(log)'''
 
     switchlog()
 
     log.mainloop()
 
+    '''    def center_window(window):
+    window.update_idletasks()
+    width = window.winfo_width()
+    height = window.winfo_height()
+    x_offset = (window.winfo_screenwidth() - width) // 2
+    y_offset = (window.winfo_screenheight() - height) // 2
+    window.geometry(f"{width}x{height}+{x_offset}+{y_offset}")
+
+    center_window(log)'''
 #--------------------------------------------------↓↓↓↓↓creating the home page↓↓↓↓↓-------------------------------------------------------
 
 def detailspage():
