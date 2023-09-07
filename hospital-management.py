@@ -398,13 +398,13 @@ def signup_button(xpass,xuser,xmob,xeid):
             EID_error_label.destroy()
             EID_error_label=CTkLabel(master=signframe, text="Emirates ID Invalid", font=('Dubai', 12), text_color='Red', height=1)
             EID_error_label.place(x=45,y=xeid)
-
+        print(passwrd_check , user_check , mob_check , EID_check)
         if passwrd_check == user_check == mob_check == EID_check is True:
-            signup_cur.execute("insert into login values('%s','%s','%s',%s,'n')"%(emirates_id,username,paswrd,mob_no))
+            signup_cur.execute("insert into login values('%s','%s','%s','%s','n')"%(emirates_id,username,paswrd,mob_no))
             sqlcon.commit()
             signup_cur.close()
             user_name = username
-            log.destroy()
+            #log.destroy()
             detailspage()
 
     else:
@@ -436,7 +436,7 @@ def adlogin_button():
                 enter_label=CTkLabel(master=adminlogframe, text="Welcome", font=('Dubai', 12), text_color='Lime')
                 enter_label.place(x=45,y=137)
                 log.after(1000,log.destroy())
-                ad_home_page()
+                #ad_home_page()
             else:
                 user_error_label.destroy()
                 pass_error_label.destroy()
@@ -796,6 +796,7 @@ def login_win():
 #--------------------------------------------------↓↓↓↓↓creating the details page↓↓↓↓↓-------------------------------------------------------
 
 def det_check():
+    global user, name_entry , address_entry, insurance_entry, allergy_entry
     name = name_entry.get()
     address = address_entry.get()
     insurance = insurance_entry.get()
@@ -810,6 +811,7 @@ def det_check():
 
 
 def detailspage():
+    global user, name_entry , address_entry, insurance_entry, allergy_entry
     detail_win = CTk()
     detail_win.geometry("{0}x{1}+0+0".format(detail_win.winfo_screenwidth(), detail_win.winfo_screenheight()))
     detail_win.title('Python Hospital')
@@ -846,7 +848,6 @@ def detailspage():
 
     detail_win.mainloop()
 
-    detailspage()
 
 
 #--------------------------------------------------↓↓↓↓↓creating the home page↓↓↓↓↓-------------------------------------------------------
