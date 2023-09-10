@@ -1,44 +1,24 @@
 from customtkinter import *
-from PIL import ImageTk, Image
+from PIL import Image,ImageTk
 
-def det_check():
-    pass
+home_win = CTk()
+home_win.geometry("{0}x{1}+0+0".format(home_win.winfo_screenwidth(), home_win.winfo_screenheight()))
+home_win.title('Python Hospital')
 
-def detailspage():
-    detail_win = CTk()
-    detail_win.geometry("{0}x{1}+0+0".format(detail_win.winfo_screenwidth(), detail_win.winfo_screenheight()))
-    detail_win.title('Python Hospital')
+homeimg = ImageTk.PhotoImage(Image.open('home-bg.png'))
+homebg = CTkLabel(master=home_win, image=homeimg)
+homebg.pack()
 
-    logimg = ImageTk.PhotoImage(Image.open('1155052.jpg'))
-    logbg = CTkLabel(master=detail_win, image=logimg)
-    logbg.pack()
+tabs = CTkTabview(master=home_win, width=750, height=790)
 
-    user = 'test'
+tab1 = tabs.add('tab1')
+tab2 = tabs.add('tab2')
+tabs.set('tab2')
 
-    detailframe = CTkFrame(master=logbg, width=650, height=750, corner_radius=15)
-    detailframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
-    detail_label = CTkLabel(master=detailframe, text="Hello "+user+'!!,', font=('Dubai', 18), height = 1)
-    detail_label.place(x=30,y=20)
+#homeframe = CTkFrame(master=homebg, width=750, height=790, corner_radius=15)
+#homeframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
-    detail_label = CTkLabel(master=detailframe, text="Please enter the following details to make easier for you to book an appointment in the future!", font=('Dubai', 14), height = 0)
-    detail_label.place(x=30,y=45)
+tabs.pack(fill=BOTH)
 
-    name_entry=CTkEntry (master=detailframe, width=400, placeholder_text="Full name")
-    name_entry.place(x=75, y=100)
-
-    Address_entry=CTkEntry (master=detailframe, width=400, placeholder_text="Address")
-    Address_entry.place(x=75, y=200)
-
-    insurance_entry=CTkEntry (master=detailframe, width=400, placeholder_text="Insurance")
-    insurance_entry.place(x=75, y=300)
-
-    allergy_entry=CTkEntry (master=detailframe, width=400, placeholder_text="Allergies (if any)")
-    allergy_entry.place(x=75, y=400)
-
-    switchbutton=CTkButton(master=signframe, width=220, text="proceed ——>", corner_radius=6, compound='right', command=lambda:det_check())
-    switchbutton.place(x=50,y=410)
-
-    detail_win.mainloop()
-
-    detailspage()
+home_win.mainloop()

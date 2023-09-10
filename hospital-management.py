@@ -1,6 +1,5 @@
 #import tkinter as tk
 import pwinput
-import customtkinter as ctk
 from customtkinter import *    #importing all libraries as part of python itself(no longer need to call customtkinter)
 from PIL import ImageTk, Image
 from colorama import Fore
@@ -35,7 +34,7 @@ def check_database():
         sqldb.close()
         sqlcon = msconn.connect(host = 'localhost', user = 'root', passwd = '%s'%(passw,), database = 'Hospital')
         cur2 = sqlcon.cursor()
-        cur2.execute('create table Login(Emirates_ID char(18) primary key, username varchar(20) unique not null,password varchar(20) not null, phone_number int(10) unique not null , admin char(1) default "n")')
+        cur2.execute('create table Login(Emirates_ID char(18) primary key, username varchar(20) unique not null,password varchar(20) not null, phone_number char(10) unique not null , admin char(1) default "n")')
         cur2.execute('create table Details(Emirates_ID char(18) primary key,username varchar(20) unique not null,Name varchar(30) not null,address varchar(50) not null, insurance varchar(30) not null,allergies varchar(90))')
         cur2.execute('create table Staff(Staff_ID int(10) primary key ,Name varchar(30) not null ,Age int(3) ,Gender char(1) not null ,Address varchar(50) not null ,Category varchar(30) not null ,Date_Of_Join date not null ,Salary decimal(10,2) Not null )')
         cur2.execute('create table Doctors(ID varchar(15) primary key, Staff_ID int(10) unique not null, Department varchar(50) not null, constraint staffkey foreign key(Staff_ID) references staff(Staff_ID))')
@@ -404,7 +403,7 @@ def signup_button(xpass,xuser,xmob,xeid):
             sqlcon.commit()
             signup_cur.close()
             user_name = username
-            #log.destroy()
+            log.destroy()
             detailspage()
 
     else:
@@ -541,10 +540,6 @@ def chngpass():
         mob_error_label.destroy()
         mob_error_label=CTkLabel(master=frgtframe, text="Mobile number not valid", font=('Dubai', 12), text_color='Green', height=1)
         mob_error_label.place(x=45,y=130)
-
-#----------------------------------------------------↓↓↓↓↓dark/light mode↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
-
-#def dark_light():
 
 
 #----------------------------------------------------↓↓↓↓↓login / signup window creation↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
@@ -796,33 +791,56 @@ def login_win():
 #--------------------------------------------------↓↓↓↓↓creating the details page↓↓↓↓↓-------------------------------------------------------
 
 def det_check():
-    global user, name_entry , address_entry, insurance_entry, allergy_entry
+    global user, name_entry , address_entry, insurance_entry, allergy_entry, name_error_label,allergy_error_label,address_error_label,insurance_error_label
+    
+    name_check = False
+    address_check = False
+    insurance_check = False
+    
     name = name_entry.get()
+    if name == '':
+        name_error_label.configure(text = 'Please enter a name', font=('Dubai', 12), text_color='Red', height=1)
+    else:
+        name_error_label.configure(text = 'Name accepted', font=('Dubai', 12), text_color='Green', height=1)
+        name_check = True
+
     address = address_entry.get()
+    if address == '':
+        address_error_label.configure(text = 'Please enter an address', font=('Dubai', 12), text_color='Red', height=1)
+    else:
+        address_error_label.configure(text = 'Address accepted', font=('Dubai', 12), text_color='Red', height=1)
+        address_check = True
+
     insurance = insurance_entry.get()
+    if insurance == '':
+        insurance_error_label.configure(text = 'Please enter an insurance', font=('Dubai', 12), text_color='Red', height=1)
+    else:
+        insurance_check = True
+
     allergy = allergy_entry.get()
 
-    det_cur = sqlcon.cursor()
-    det_cur.execute('insert into details values("%s","%s","%s","%s","%s","%s")'%(emirates_id,user,name,address,insurance,allergy))
-    sqlcon.commit()
-    det_cur.close()
-
-    home_page()
+    if name_check==address_check==insurance_check is True:
+        det_cur = sqlcon.cursor()
+        det_cur.execute('insert into details values("%s","%s","%s","%s","%s","%s")'%(emirates_id,user,name,address,insurance,allergy))
+        sqlcon.commit()
+        det_cur.close()
+        detail_win.destroy()
+        home_page()
 
 
 def detailspage():
-    global user, name_entry , address_entry, insurance_entry, allergy_entry
+    global detail_win,user, name_entry , address_entry, insurance_entry, allergy_entry, name_error_label,allergy_error_label,address_error_label,insurance_error_label
     detail_win = CTk()
     detail_win.geometry("{0}x{1}+0+0".format(detail_win.winfo_screenwidth(), detail_win.winfo_screenheight()))
     detail_win.title('Python Hospital')
 
-    logimg = ImageTk.PhotoImage(Image.open('1155052.jpg'))
-    logbg = CTkLabel(master=detail_win, image=logimg)
-    logbg.pack()
+    detimg = ImageTk.PhotoImage(Image.open('home-bg.png'))
+    detbg = CTkLabel(master=detail_win, image=detimg)
+    detbg.pack()
 
     user = user_name
 
-    detailframe = CTkFrame(master=logbg, width=650, height=750, corner_radius=15)
+    detailframe = CTkFrame(master=detail_win, width=650, height=750, corner_radius=15)
     detailframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
     detail_label = CTkLabel(master=detailframe, text="Hello "+user+'!!,', font=('Dubai', 18), height = 1)
@@ -832,19 +850,31 @@ def detailspage():
     detail_label.place(x=30,y=45)
 
     name_entry=CTkEntry (master=detailframe, width=400, placeholder_text="Full name")
-    name_entry.place(x=75, y=100)
+    name_entry.place(x=125, y=100)
+
+    name_error_label = CTkLabel(master=detailframe, text="nametest", height = 0)
+    name_error_label.place(x = 125,y = 150 )
 
     address_entry=CTkEntry (master=detailframe, width=400, placeholder_text="Address")
-    address_entry.place(x=75, y=200)
+    address_entry.place(x=125, y=200)
+
+    address_error_label = CTkLabel(master=detailframe, text="addresstest", height = 0)
+    address_error_label.place(x = 125,y = 250 )
 
     insurance_entry=CTkEntry (master=detailframe, width=400, placeholder_text="Insurance")
-    insurance_entry.place(x=75, y=300)
+    insurance_entry.place(x=125, y=300)
+
+    insurance_error_label = CTkLabel(master=detailframe, text="insurancetest", height = 0)
+    insurance_error_label.place(x = 125,y = 350 )
 
     allergy_entry=CTkEntry (master=detailframe, width=400, placeholder_text="Allergies (if any)")
-    allergy_entry.place(x=75, y=400)
+    allergy_entry.place(x=125, y=400)
 
-    switchbutton=CTkButton(master=signframe, width=220, text="proceed ——>", corner_radius=6, compound='right', command=lambda:det_check())
-    switchbutton.place(x=50,y=410)
+    allergy_error_label = CTkLabel(master=detailframe, text="allergytest", height = 0)
+    allergy_error_label.place(x = 125,y = 450 )
+
+    switchbutton=CTkButton(master=detailframe, width=220, text="proceed ——>", corner_radius=6, compound='right', command=lambda:det_check())
+    switchbutton.place(x=215,y=450)
 
     detail_win.mainloop()
 
@@ -854,14 +884,20 @@ def detailspage():
 
 def home_page():
     home_win = CTk()
-    home_win.geometry('1280x800')
+    home_win.geometry("{0}x{1}+0+0".format(home_win.winfo_screenwidth(), home_win.winfo_screenheight()))
     home_win.title('Python Hospital')
-
-    home_win.eval('tk::PlaceWindow . center')
 
     homeimg = ImageTk.PhotoImage(Image.open('home-bg.png'))
     homebg = CTkLabel(master=home_win, image=homeimg)
     homebg.pack()
+
+    tabs = CTktabview(master=homebg)
+
+    tab1 = CTkFrame(tabs)
+    tab2 = CTkframe(tabs)
+
+    tabs.add(tab1)
+    tabs.add(tab2)
 
     homeframe = CTkFrame(master=homebg, width=750, height=790, corner_radius=15)
     homeframe.place(relx=0.5,rely=0.5,anchor=CENTER)
