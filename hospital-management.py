@@ -7,7 +7,7 @@ import mysql.connector as msconn
 import re
 
 set_appearance_mode('dark')#can be changed to light
-set_default_color_theme('green')#can also be blue or dark-blue
+#set_default_color_theme('green')#can also be blue or dark-blue
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -35,6 +35,7 @@ def check_database():
         sqlcon = msconn.connect(host = 'localhost', user = 'root', passwd = '%s'%(passw,), database = 'Hospital')
         cur2 = sqlcon.cursor()
         cur2.execute('create table Login(Emirates_ID char(18) primary key, username varchar(20) unique not null,password varchar(20) not null, phone_number char(10) unique not null , admin char(1) default "n")')
+        cur2.execute('create table specialisations(spec_name varchar(30) primary key)')
         cur2.execute('create table Details(Emirates_ID char(18) primary key,username varchar(20) unique not null,Name varchar(30) not null,address varchar(50) not null, insurance varchar(30) not null,allergies varchar(90))')
         cur2.execute('create table Staff(Staff_ID int(10) primary key ,Name varchar(30) not null ,Age int(3) ,Gender char(1) not null ,Address varchar(50) not null ,Category varchar(30) not null ,Date_Of_Join date not null ,Salary decimal(10,2) Not null )')
         cur2.execute('create table Doctors(ID varchar(15) primary key, Staff_ID int(10) unique not null, Department varchar(50) not null, constraint staffkey foreign key(Staff_ID) references staff(Staff_ID))')
@@ -343,7 +344,7 @@ def signup_button(xpass,xuser,xmob,xeid):
         if user_check is True:
             user_error_label.destroy()
             user_error_label=CTkLabel(master=signframe, text="Username accepted.", font=('Dubai', 12), text_color='Green', height=1)
-            user_check = True
+
 
         user_error_label.place(x=45,y=xuser)
 
@@ -887,24 +888,69 @@ def home_page():
     home_win.geometry("{0}x{1}+0+0".format(home_win.winfo_screenwidth(), home_win.winfo_screenheight()))
     home_win.title('Python Hospital')
 
-    homeimg = ImageTk.PhotoImage(Image.open('home-bg.png'))
+    homeimg = ImageTk.PhotoImage(Image.open('pxfuel.jpg'))
     homebg = CTkLabel(master=home_win, image=homeimg)
     homebg.pack()
 
-    tabs = CTktabview(master=homebg)
+    tabs = CTkTabview(master=homebg, width=750, height=790)
 
-    tab1 = CTkFrame(tabs)
-    tab2 = CTkframe(tabs)
+    tab1 = tabs.add('about us')
+    tab2 = tabs.add('book an appointment')
+    tabs.set('book an appointment')
 
-    tabs.add(tab1)
-    tabs.add(tab2)
+    desclabel = CTkLabel(master=tab1, text="test label", font=('Dubai', 14), height = 0)
+    desclabel.pack(padx=5)
 
-    homeframe = CTkFrame(master=homebg, width=750, height=790, corner_radius=15)
-    homeframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+    booklabel = CTkLabel(master=tab2, text="What specialisation are you looking for?", font=('Dubai', 20), height = 0)
+    booklabel.pack(pady=50)
+
+    catframe = CTkScrollableFrame(master=tab2,height=500,width=400)
+    catframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
-    home_win.mainloop()
+    docicon=CTkImage(Image.open("docicon.jpg").resize((20,20), Image.Resampling.LANCZOS))
+    button_dict = {}
 
+    home_cur=sqlcon.cursor()
+    home_cur.execute('select * from specialisations')
+
+    spl = home_cur.fetchall()
+
+    def spl_fn(a):
+        docframe = CTkScrollableFrame(master=tab2,height=500,width=400)
+        docframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+
+        home_cur=sqlcon.cursor()
+        home_cur.execute('select * from doctors where specialisation = "%s"'%(a[0]))
+
+        doc = home_cur.fetchall()    
+
+        docicon=CTkImage(Image.open("docicon.jpg").resize((20,20), Image.Resampling.LANCZOS))
+        button_dict = {}
+        for i in range(0,len(doc)):
+            button_dict[i] = CTkButton(docframe,image=docicon,width=380, text = doc[i][1],compound='left',anchor='w')
+            button_dict[i].pack(pady=10)
+
+
+        def des():
+            docframe.destroy()
+            back_button.destroy()
+            cat()
+
+        back_button=CTkButton(tab2,width=20, text = '←back',command =lambda:des())
+        back_button.place(x=650,y=70)
+
+        print(a[0])
+
+    def cat():
+        
+        for i in range(0,len(spl)):
+            button_dict[i] = CTkButton(catframe,image=docicon,width=380, text = spl[i],compound='left',anchor='w',command=lambda item=spl[i]:spl_fn(item))
+            button_dict[i].pack(pady=10)
+    cat()
+
+    tabs.place(relx=0.5,rely=0.5,anchor=CENTER)
+    home_win.mainloop() 
 #----------------------------------------------------↓↓↓↓↓main function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
 def main():
