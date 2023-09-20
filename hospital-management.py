@@ -1,4 +1,4 @@
-#import tkinter as tk
+import tkinter as tk
 import pwinput
 from customtkinter import *    #importing all libraries as part of python itself(no longer need to call customtkinter)
 from PIL import ImageTk, Image
@@ -668,6 +668,8 @@ def login_win():
         switchbutton=CTkButton(master=frgtframe, width=100, text="← back to login page", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:switchlog())
         switchbutton.place(x=50,y=320)
 
+        log.bind('<Return>',lambda event:chngpass())
+
 
     #----------------------------------------------------↓↓↓↓↓login frame↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
@@ -711,6 +713,8 @@ def login_win():
 #
         switchbutton=CTkButton(master=logframe, width=220, text="Don't have an account? sign up.", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:switchsignup())
         switchbutton.place(x=50,y=320)
+
+        log.bind('<Return>',lambda event:login_button())
 
     #----------------------------------------------------↓↓↓↓↓signup frame↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
@@ -764,6 +768,9 @@ def login_win():
 
         switchbutton=CTkButton(master=signframe, width=220, text="Already have an account? Login.", corner_radius=6, compound='right', fg_color='#2b2b2b', hover_color='#2b2b2b', command=lambda:del_frame())
         switchbutton.place(x=50,y=410)
+
+        log.bind('<Return>',lambda event:signup_button(xpass=200,xuser=105,xmob=260,xeid=320))
+
 
     #--------------------------------------------------↓↓↓↓↓creating the login window↓↓↓↓↓-------------------------------------------------------
 
@@ -931,23 +938,13 @@ def home_page():
             button_dict[i] = CTkButton(docframe,image=docicon,width=380, text = doc[i][1],compound='left',anchor='w')
             button_dict[i].pack(pady=10)
 
-
-        def des():
-            docframe.destroy()
-            back_button.destroy()
-            cat()
-
-        back_button=CTkButton(tab2,width=20, text = '←back',command =lambda:des())
-        back_button.place(x=650,y=70)
-
         print(a[0])
 
-    def cat():
-        
+    def category():
         for i in range(0,len(spl)):
             button_dict[i] = CTkButton(catframe,image=docicon,width=380, text = spl[i],compound='left',anchor='w',command=lambda item=spl[i]:spl_fn(item))
             button_dict[i].pack(pady=10)
-    cat()
+    category()
 
     tabs.place(relx=0.5,rely=0.5,anchor=CENTER)
     home_win.mainloop() 
