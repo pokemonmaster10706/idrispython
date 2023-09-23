@@ -930,6 +930,10 @@ def home_page():
         home_cur=sqlcon.cursor()
         home_cur.execute('select * from doctors where specialisation = "%s"'%(a[0]))
 
+        def doctors():
+            timeframe = CTkScrollableFrame(master=tab2,height=500,width=400)
+            timeframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+
         doc = home_cur.fetchall()    
 
         docicon=CTkImage(Image.open("docicon.jpg").resize((20,20), Image.Resampling.LANCZOS))
