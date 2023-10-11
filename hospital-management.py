@@ -32,7 +32,7 @@ def check_database():
         sqldb.commit()
         cur.close()
         sqldb.close()
-        sqlcon = msconn.connect(host = 'localhost', user = 'root', passwd = '%s'%(passw,), database = 'Hospital')
+        sqlcon = msconn.connect(host = 'localhost', user = 'root', passwd = f'{passw}', database = 'Hospital')
         cur2 = sqlcon.cursor()
         cur2.execute('create table Login(Emirates_ID char(18) primary key, username varchar(20) unique not null,password varchar(20) not null, phone_number char(10) unique not null , admin char(1) default "n")')
         cur2.execute('create table specialisations(spec_name varchar(30) primary key)')
@@ -52,7 +52,7 @@ def check_database():
     else:
         cur.close()
         sqldb.close()
-        sqlcon = msconn.connect(host = 'localhost', user = 'root', passwd = '%s'%(passw,), database = 'Hospital')
+        sqlcon = msconn.connect(host = 'localhost', user = 'root', passwd = f'{passw}', database = 'Hospital')
 
 #----------------------------------------------------↓↓↓↓↓password checking function↓↓↓↓↓---------------------------------------------------------------------------------------------------------------------------------
 
@@ -137,7 +137,7 @@ def adsignup_button():
     username = userentry.get()
     signup_cur = sqlcon.cursor()
 
-    signup_cur.execute('select * from login where username = "%s"'%(username))
+    signup_cur.execute(f'select * from login where username = "{username}"')
     user_exist = signup_cur.fetchall()
 
     if user_exist == []:
@@ -245,7 +245,7 @@ def adsignup_button():
 
 
         if passwrd_check == user_check == mob_check is True:
-            signup_cur.execute("insert into login values('%s','%s',%s,'y')"%(username,paswrd,mob_no))
+            signup_cur.execute(f"insert into login values('{username}','{paswrd}',{mob_no},'y')")
             sqlcon.commit()
             signup_cur.close()
             log.destroy()
@@ -267,7 +267,7 @@ def signup_button(xpass,xuser,xmob,xeid):
     username = userentry.get()
     signup_cur = sqlcon.cursor()
 
-    signup_cur.execute('select * from login where username = "%s"'%(username))
+    signup_cur.execute(f'select * from login where username = "{username}"')
     user_exist = signup_cur.fetchall()
 
     if user_exist == []:
@@ -378,7 +378,7 @@ def signup_button(xpass,xuser,xmob,xeid):
         pattern = re.compile(r'^\d{3}-?\d{4}-?\d{7}-?\d$')
 
         EID_check = False
-        signup_cur.execute('select * from login where Emirates_ID = "%s"'%(emirates_id))
+        signup_cur.execute(f'select * from login where Emirates_ID = "{emirates_id}"')
         EID_exists = signup_cur.fetchall()
 
         if pattern.match(emirates_id) and emirates_id[0:3] == '784':
@@ -400,7 +400,7 @@ def signup_button(xpass,xuser,xmob,xeid):
             EID_error_label.place(x=45,y=xeid)
         print(passwrd_check , user_check , mob_check , EID_check)
         if passwrd_check == user_check == mob_check == EID_check is True:
-            signup_cur.execute("insert into login values('%s','%s','%s','%s','n')"%(emirates_id,username,paswrd,mob_no))
+            signup_cur.execute(f"insert into login values('{emirates_id}','{username}','{paswrd}','{mob_no}','n')")
             sqlcon.commit()
             signup_cur.close()
             user_name = username
@@ -422,7 +422,7 @@ def adlogin_button():
 
 
     log_cur = sqlcon.cursor()
-    log_cur.execute('select * from login where username = "%s"'%(username))
+    log_cur.execute(f'select * from login where username = "{username}"')
     user_pass = log_cur.fetchall()
 
 #    print(user_pass)      #for debugging
@@ -470,7 +470,7 @@ def login_button():
 
 
     log_cur = sqlcon.cursor()
-    log_cur.execute('select * from login where username = "%s"'%(username))
+    log_cur.execute(f'select * from login where username = "{username}"')
     user_pass = log_cur.fetchall()
 
 #    print(user_pass)      #for debugging
@@ -506,7 +506,7 @@ def chngpass():
     if mob.isdigit():
         if len(mob)==10:
             mobcur = sqlcon.cursor()
-            mobcur.execute('select * from login where phone_number = %s'%(mob))
+            mobcur.execute(f'select * from login where phone_number = {mob}')
             acc = mobcur.fetchall()
 
             if acc == []:
@@ -528,7 +528,7 @@ def chngpass():
                     password(passentry,repassentry,frgtframe,257)
                     if passwrd_check is True:
                         print(Fore.WHITE + paswrd)
-                        mobcur.execute('update login set password = "%s" where phone_number = "%s"'%(paswrd,mob))
+                        mobcur.execute(f'update login set password = "{paswrd}" where phone_number = "{mob}"')
                         sqlcon.commit()
                         mobcur.close()
                         detailspage()
@@ -829,7 +829,7 @@ def det_check():
 
     if name_check==address_check==insurance_check is True:
         det_cur = sqlcon.cursor()
-        det_cur.execute('insert into details values("%s","%s","%s","%s","%s","%s")'%(emirates_id,user,name,address,insurance,allergy))
+        det_cur.execute(f'insert into details values("{emirates_id}","{user}","{name}","{address}","{insurance}","{allergy}")')
         sqlcon.commit()
         det_cur.close()
         detail_win.destroy()
@@ -924,22 +924,49 @@ def home_page():
     spl = home_cur.fetchall()
 
     def spl_fn(a):
-        docframe = CTkScrollableFrame(master=tab2,height=500,width=400)
-        docframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+        bgdocframe = CTkFrame(master=tab2,height=500,width=400)
+        bgdocframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+        docframe = CTkScrollableFrame(master=bgdocframe,height=500,width=400,fg_color = '#333333')
+        docframe.pack()
+        def _bak():
+            bgdocframe.destroy()
+            back_cat.destroy()
 
-        home_cur=sqlcon.cursor()
-        home_cur.execute('select * from doctors where specialisation = "%s"'%(a[0]))
+        back_cat = CTkButton(tab2,text = 'bak',command = lambda:_bak())
+        back_cat.place(relx=0.1,rely=0.1)
 
-        def doctors():
-            timeframe = CTkScrollableFrame(master=tab2,height=500,width=400)
+        #home_cur=sqlcon.cursor()
+        home_cur.execute(f'select * from doctors where specialisation = "{a[0]}"')
+
+        def doctors(a):
+            bgtimeframe = CTkFrame(master=tab2,height=500,width=400)
+            bgtimeframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+            timeframe = CTkScrollableFrame(master=bgtimeframe,height=500,width=400,fg_color = '#333333')
             timeframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
+            def _bak():
+                bgtimeframe.destroy()
+                back_cat.destroy()
+
+            back_cat = CTkButton(tab2,text = 'bak',command = lambda:_bak())
+            back_cat.place(relx=0.1,rely=0.1)
+
+            
+            home_cur.execute(f'select * from timings where doc_id = "{a[0]}"')
+            time=home_cur.fetchone()
+
+            for i in range(1,len(time)):
+                if time[i] == 'y':
+                    button_dict[i] = CTkButton(timeframe,image=docicon,width=380, text = str(5+i)+'AM',compound='left',anchor='w')
+                    button_dict[i].pack(pady=10)
+       
         doc = home_cur.fetchall()    
 
         docicon=CTkImage(Image.open("docicon.jpg").resize((20,20), Image.Resampling.LANCZOS))
         button_dict = {}
         for i in range(0,len(doc)):
-            button_dict[i] = CTkButton(docframe,image=docicon,width=380, text = doc[i][1],compound='left',anchor='w')
+            button_dict[i] = CTkButton(docframe,image=docicon,width=380, text = doc[i][1],compound='left',anchor='w',command=lambda item=doc[i]:doctors(item))
+            print(doc[i])
             button_dict[i].pack(pady=10)
 
         print(a[0])
@@ -966,7 +993,7 @@ if __name__ == '__main__':
 #    passw = pwinput.pwinput()
 #    passw = input('Enter Password: ')
 #    print('\b'*(len(passw)+1))
-    sqldb = msconn.connect(host = 'localhost', user = 'root', passwd = '%s'%(passw,))
+    sqldb = msconn.connect(host = 'localhost', user = 'root', passwd = '{passw}')
 
     check_database()
     login_win()

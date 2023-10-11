@@ -38,27 +38,60 @@ def home_page():
     spl = home_cur.fetchall()
 
     def spl_fn(a):
-        docframe = CTkScrollableFrame(master=tab2,height=500,width=400)
-        docframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+        bgdocframe = CTkFrame(master=tab2,height=500,width=400)
+        bgdocframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+        docframe = CTkScrollableFrame(master=bgdocframe,height=500,width=400,fg_color = '#333333')
+        docframe.pack()
+        def _bak():
+            #docframe.destroy()
+            bgdocframe.destroy()
+            back_cat.destroy()
+
+        back_cat = CTkButton(tab2,text = 'bak',command = lambda:_bak())
+        back_cat.place(relx=0.1,rely=0.1)
 
         home_cur=sqlcon.cursor()
         home_cur.execute('select * from doctors where specialisation = "%s"'%(a[0]))
+
+        def doctors(a):
+            bgtimeframe = CTkFrame(master=tab2,height=500,width=400)
+            bgtimeframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+            timeframe = CTkScrollableFrame(master=bgtimeframe,height=500,width=400,fg_color = '#333333')
+            timeframe.place(relx=0.5,rely=0.5,anchor=CENTER)
+
+            def _bak():
+                bgtimeframe.destroy()
+                back_cat.destroy()
+
+            back_cat = CTkButton(tab2,text = 'bak',command = lambda:_bak())
+            back_cat.place(relx=0.1,rely=0.1)
+
+            
+            home_cur.execute(f'select * from timings where doc_id = "{a[0]}"')
+            time=home_cur.fetchone()
+
+            for i in range(1,len(time)):
+                if time[i] == 'y':
+                    button_dict[i] = CTkButton(timeframe,image=docicon,width=380, text = str(5+i)+'AM',compound='left',anchor='w')
+                    button_dict[i].pack(pady=10)
+       
 
         doc = home_cur.fetchall()    
 
         docicon=CTkImage(Image.open("docicon.jpg").resize((20,20), Image.Resampling.LANCZOS))
         button_dict = {}
         for i in range(0,len(doc)):
-            button_dict[i] = CTkButton(docframe,image=docicon,width=380, text = doc[i][1],compound='left',anchor='w')
+            button_dict[i] = CTkButton(docframe,image=docicon,width=380, text = doc[i][1],compound='left',anchor='w',command=lambda item=doc[i]:doctors(item))
+            print(doc[i])
             button_dict[i].pack(pady=10)
 
         print(a[0])
 
-    def category():
-        for i in range(0,len(spl)):
-            button_dict[i] = CTkButton(catframe,image=docicon,width=380, text = spl[i],compound='left',anchor='w',command=lambda item=spl[i]:spl_fn(item))
-            button_dict[i].pack(pady=10)
-    category()
+
+    for i in range(0,len(spl)):
+        button_dict[i] = CTkButton(catframe,image=docicon,width=380, text = spl[i],compound='left',anchor='w',command=lambda item=spl[i]:spl_fn(item))
+        button_dict[i].pack(pady=10)
+    
 
     tabs.place(relx=0.5,rely=0.5,anchor=CENTER)
     home_win.mainloop() 
