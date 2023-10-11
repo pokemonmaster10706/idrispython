@@ -993,7 +993,7 @@ if __name__ == '__main__':
 #    passw = pwinput.pwinput()
 #    passw = input('Enter Password: ')
 #    print('\b'*(len(passw)+1))
-    sqldb = msconn.connect(host = 'localhost', user = 'root', passwd = '{passw}')
+    sqldb = msconn.connect(host = 'localhost', user = 'root', passwd = f'{passw}')
 
     check_database()
     login_win()
