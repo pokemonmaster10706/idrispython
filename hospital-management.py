@@ -895,7 +895,7 @@ def home_page():
     home_win.geometry("{0}x{1}+0+0".format(home_win.winfo_screenwidth(), home_win.winfo_screenheight()))
     home_win.title('Python Hospital')
 
-    homeimg = ImageTk.PhotoImage(Image.open('pxfuel.jpg'))
+    homeimg = ImageTk.PhotoImage(Image.open('untitled.jpg'))
     homebg = CTkLabel(master=home_win, image=homeimg)
     homebg.pack()
 
@@ -929,14 +929,15 @@ def home_page():
         docframe = CTkScrollableFrame(master=bgdocframe,height=500,width=400,fg_color = '#333333')
         docframe.pack()
         def _bak():
+            #docframe.destroy()
             bgdocframe.destroy()
             back_cat.destroy()
 
         back_cat = CTkButton(tab2,text = 'bak',command = lambda:_bak())
         back_cat.place(relx=0.1,rely=0.1)
 
-        #home_cur=sqlcon.cursor()
-        home_cur.execute(f'select * from doctors where specialisation = "{a[0]}"')
+        home_cur=sqlcon.cursor()
+        home_cur.execute('select * from doctors where specialisation = "%s"'%(a[0]))
 
         def doctors(a):
             bgtimeframe = CTkFrame(master=tab2,height=500,width=400)
@@ -955,11 +956,15 @@ def home_page():
             home_cur.execute(f'select * from timings where doc_id = "{a[0]}"')
             time=home_cur.fetchone()
 
+            def ptime(a):
+                print(a)
+
             for i in range(1,len(time)):
                 if time[i] == 'y':
-                    button_dict[i] = CTkButton(timeframe,image=docicon,width=380, text = str(5+i)+'AM',compound='left',anchor='w')
+                    button_dict[i] = CTkButton(timeframe,image=docicon,width=380, text = str(5+i)+'AM',compound='left',anchor='w',command = lambda item =str(5+i)+'AM':ptime(item))
                     button_dict[i].pack(pady=10)
        
+
         doc = home_cur.fetchall()    
 
         docicon=CTkImage(Image.open("docicon.jpg").resize((20,20), Image.Resampling.LANCZOS))
