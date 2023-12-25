@@ -77,14 +77,14 @@ def home_page():
                 apptframe = CTkFrame(master=tab2,height=520,width=425,fg_color = '#333333')
                 apptframe.place(relx=0.5,rely=0.5,anchor=CENTER)
 
-                apptlabel = CTkLabel(master=apptframe, text=f"Appointment for {spl_var[0]} \n with Dr.{doc_var[1]} \nat {time_var}", font=('Dubai', 14), height = 0)
-                apptlabel.place(relx=0.1,rely=0.1)
+                apptlabel = CTkLabel(master=apptframe, text=f"Appointment for {spl_var[0]} \n with Dr.{doc_var[1]} \nat {time_var}", font=('Dubai', 20), height = 0)
+                apptlabel.pack(padx=100,pady=225)
                 
                 def appt():
                     home_cur.execute(f'update timings set {time_var} = "n" where doc_id = "{doc_var[0]}"')
                     home_cur.execute('')
                     sqlcon.commit()
-                    pass
+                    
                     
 
                 appt_button = CTkButton(apptframe,text = 'confirm appointment',command = lambda:appt())

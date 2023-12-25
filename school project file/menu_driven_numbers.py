@@ -1,21 +1,17 @@
 def factorial():
     n = int(input('Please enter a number to find its factorial: '))
     f = 1
-    for i in range(1,n+1):
-        f *= i
+    for i in range(1,n+1): f *= i
     print(f'The factorial of the number {n} is {f}')
 
 def even_odd():
     n = int(input('Please enter a number to chech wether its even or odd: '))
     while True:
         if str(n).isdigit():
-            if n%2 == 0:
-                print('number is even')
-            else:
-                print('number is odd')
+            if n%2 == 0:print('number is even')
+            else:print('number is odd')
             break
-        else:
-            print('please enter a valid number')
+        else:print('please enter a valid number')
 
 def sum_of_digits():
     n = int(input('Please enter a number to find sum of digits: '))
@@ -41,10 +37,8 @@ def palindrome():
     while n > 0:
         rev = rev*10+n%10
         n//=10
-    if rev == on:
-        print(f'yes the number {on} is a palindrome')
-    else:
-        print(f'the number {on} is not a palindrome')
+    if rev == on:print(f'yes the number {on} is a palindrome')
+    else:print(f'the number {on} is not a palindrome')
 
 def armstrong():
     n = int(input('Please enter a number to check for armstrong: '))
@@ -54,14 +48,12 @@ def armstrong():
     while n>0:
         s += (n%10)**degree
         n//=10
-    if s == on :
-        print(f'the number {on} is an armstrong')
-    else:
-        print(f'the number {on} is not an armstrong')
+    if s == on :print(f'the number {on} is an armstrong')
+    else:print(f'the number {on} is not an armstrong')
 
 while True:
     print('\n\n     ----------MENU-DRIVEN-PROGRAM----------\n')
-    print('''   1. Factorial of a number
+    print('''    1. Factorial of a number
     2. Check the number is even or odd 
     3. Find the sum of digits of a number 
     4. Reverse the number 
@@ -69,32 +61,14 @@ while True:
     6. Check the number is Armstrong or not 
     0. Quit''')
     while True:
-        try:
-            ch = int(input('enter your choice: '))
-            break
-        except:
-            print('please enter only valid numbers\n\n')
-    if ch == 0:
-        break
-
-    elif ch == 1:
-        factorial()
-
-    elif ch == 2:
-        even_odd()
-
-    elif ch == 3:
-        sum_of_digits()
-        
-    elif ch == 4:
-        reverse() 
-
-    elif ch == 5:
-        palindrome()
-        
-    elif ch == 6:
-        armstrong()
-    
-    else:
-        print('please enter a valid choice\n')
+        try:ch = int(input('enter your choice: '));break
+        except:print('please enter only valid numbers\n\n')
+    if ch == 0:break
+    elif ch == 1:factorial()
+    elif ch == 2:even_odd()
+    elif ch == 3:sum_of_digits()
+    elif ch == 4:reverse() 
+    elif ch == 5:palindrome()
+    elif ch == 6:armstrong()
+    else:print('please enter a valid choice\n')
 
