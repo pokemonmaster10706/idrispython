@@ -103,6 +103,9 @@ def home_page():
                     if time[i] == 'y':
                         button_dict[i] = CTkButton(timeframe,image=docicon,width=380, text = str(5+i)+'AM',compound='left',anchor='w',command = lambda item =str(5+i)+'AM':doc_time(item))
                         button_dict[i].pack(pady=10)
+                    else:
+                        button_dict[i] = CTkButton(timeframe,image=docicon,width=380, text = str(5+i)+'AM',compound='left',anchor='w',state = 'disabled',command = lambda item =str(5+i)+'AM':doc_time(item))
+                        button_dict[i].pack(pady=10)
             time_buttons()
 
         doc = home_cur.fetchall()    
