@@ -1,6 +1,6 @@
 import tkinter as tk
 import pwinput
-from customtkinter import *    #importing all libraries as part of python itself(no longer need to call customtkinter)
+from customtkinter import *    #importing all libraries as part of python itself(no longer need to call customtkinter)(wild card entry)
 from PIL import ImageTk, Image
 from colorama import Fore
 import mysql.connector as msconn
