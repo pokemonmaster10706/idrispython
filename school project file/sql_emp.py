@@ -24,7 +24,7 @@ def search():
     print('\n',tabulate.tabulate(mycur.fetchall(),headers = ['Emp_no','Emp_name','Designation','Department','Salary']))
 
 def delete():
-    try:mycur.execute(f'delete from employee where emp_no = {int(input("enter emp no to delete: "))}');sqlcon.commit()
+    try:mycur.execute(f'delete from employee where emp_no = {int(input('enter emp no to delete: '))}');sqlcon.commit()
     except:print('employee not found')
 
 def modify():

@@ -1,5 +1,5 @@
-sentence = input('enter a sentence: \n\n')
-word = input('enter a word: ')
+sentence = input('enter a sentence: \n')
+word = input('\nenter a word: ')
 sentence = sentence.split()
 
 if word in sentence:
