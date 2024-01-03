@@ -585,7 +585,8 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
         feed = feedbox.get('0.0','end')
         feedcur = sqlcon.cursor()
         if len(feed)>1:
-            feedcur.execute(f'insert into feedback values("{username}","{feed.strip()}")')
+            try:feedcur.execute(f'insert into feedback values("{username}","{feed.strip()}")')
+            except:feedcur.execute(f'insert into feedback values("{user_name}","{feed.strip()}")')
             sqlcon.commit()
             feedbox.delete('0.0','end')
 
