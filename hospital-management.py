@@ -542,7 +542,7 @@ def home_page():
     tab2 = tabs.add('book an appointment')
     tab3 = tabs.add('feedback')
     #tab4 = tabs.add('profile')
-    tabs.set('feedback')
+    tabs.set('book an appointment')
 
     descframe = CTkFrame(master=tab1,height=500,width=360)
     descframe.place(relx=0.25,rely=0.5,anchor='center')
