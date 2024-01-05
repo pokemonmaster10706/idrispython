@@ -29,12 +29,12 @@ def check_database():
         sqldb.close()
         sqlcon = msconn.connect(host = 'localhost', user = 'root', passwd = f'{passw}', database = 'Hospital')
         cur2 = sqlcon.cursor()
-        cur2.execute('create table Login(Emirates_ID char(18) primary key, username varchar(20) unique not null,password varchar(20) not null, phone_number char(10) unique not null , admin char(1) default "n")')
-        cur2.execute('create table specialisations(spec_name varchar(30) primary key)')
-        cur2.execute('create table Details(Emirates_ID char(18) primary key,username varchar(20) unique not null,Name varchar(30) not null,address varchar(50) not null, insurance varchar(30) not null,allergies varchar(90))')        
-        cur2.execute('create table Doctors(ID varchar(15) primary key, Staff_ID int(10) unique not null, Department varchar(50) not null, constraint staffkey foreign key(Staff_ID) references staff(Staff_ID))')
-        cur2.execute('CREATE TABLE timings ( Doc_ID varchar(15) NOT NULL, 6AM char(1) DEFAULT NULL, 7AM char(1) DEFAULT NULL, 8AM char(1) DEFAULT NULL, 9AM char(1) DEFAULT NULL, 10AM char(1) DEFAULT NULL, 11AM char(1) DEFAULT NULL, 12PM char(1) DEFAULT NULL, PRIMARY KEY (Doc_ID))')
-        cur2.execute('CREATE TABLE feedback ( user varchar(20) DEFAULT NULL, feed varchar(500) DEFAULT NULL, KEY user (user), FOREIGN KEY (user) REFERENCES login (username))')
+        cur2.execute('CREATE TABLE  login  (Emirates_ID  char(18) not null primary key,username  varchar(20) NOT NULLunique,password  varchar(20) NOT NULL ,phone_number  char(10) NOT NULL unique)')
+        cur2.execute('CREATE TABLE  specialisations  (spec_name  varchar(30) NOT NULL primary key)')
+        cur2.execute('CREATE TABLE  details  (Emirates_ID  char(18) NOT NULL primary key,username  varchar(20) NOT NULL,Name  varchar(30) NOT NULL,address  varchar(50) NOT NULL,insurance  varchar(30) NOT NULL,allergies  varchar(90) )')        
+        cur2.execute('CREATE TABLE  doctors  (ID  varchar(15) NOT NULL primary key,name  varchar(20) NOT NULL,gender char(1) , specialisation  varchar(50) NOT NULL)')
+        cur2.execute('CREATE TABLE timings ( Doc_ID varchar(15) PRIMARY KEY NOT NULL, 6AM char(1) DEFAULT "Y", 7AM char(1) DEFAULT "Y", 8AM char(1) DEFAULT "Y", 9AM char(1) DEFAULT "Y", 10AM char(1) DEFAULT "Y", 11AM char(1) DEFAULT "Y", 12PM char(1) DEFAULT "Y"')
+        cur2.execute('CREATE TABLE feedback ( user varchar(20) PRIMARY KEY, feed varchar(500) DEFAULT NULL, FOREIGN KEY (user) REFERENCES login (username))')
         sqlcon.commit()
         cur2.close()
     
@@ -612,11 +612,11 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
         bgdocframe.place(relx=0.5,rely=0.5,anchor='center')
         docframe = CTkScrollableFrame(master=bgdocframe,height=500,width=400)
         docframe.pack()
-        def _bak():
+        def _back():
             bgdocframe.destroy()
             back_cat.destroy()
 
-        back_cat = CTkButton(tab2,text = 'bak',command = lambda:_bak())
+        back_cat = CTkButton(tab2,text = 'back',command = lambda:_back())
         back_cat.place(relx=0.1,rely=0.1)
 
         home_cur=sqlcon.cursor()
@@ -628,11 +628,11 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
             timeframe = CTkScrollableFrame(master=bgtimeframe,height=500,width=400)
             timeframe.place(relx=0.5,rely=0.5,anchor='center')
 
-            def _bak():
+            def _back():
                 bgtimeframe.destroy()
                 back_cat.destroy()
 
-            back_cat = CTkButton(tab2,text = 'bak',command = lambda:_bak())
+            back_cat = CTkButton(tab2,text = 'back',command = lambda:_back())
             back_cat.place(relx=0.1,rely=0.1)
 
             
@@ -653,11 +653,11 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
                     acclabel = CTkLabel(master=accframe, text="Appointment confirmed !", font=('Dubai', 20), height = 0)
                     acclabel.pack(padx=100,pady=225)
 
-                    def _bak():
+                    def _back():
                         accframe.destroy()
                         back_cat.destroy()
 
-                    back_cat = CTkButton(tab2,text = 'bak',command = lambda:_bak())
+                    back_cat = CTkButton(tab2,text = 'back',command = lambda:_back())
                     back_cat.place(relx=0.1,rely=0.1)
                 
                 def appt():
@@ -668,11 +668,11 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
                 appt_button = CTkButton(apptframe,text = 'confirm appointment',command = lambda:appt())
                 appt_button.place(relx=0.63,rely=0.9)
 
-                def _bak():
+                def _back():
                     apptframe.destroy()
                     back_cat.destroy()
 
-                back_cat = CTkButton(tab2,text = 'bak',command = lambda:_bak())
+                back_cat = CTkButton(tab2,text = 'back',command = lambda:_back())
                 back_cat.place(relx=0.1,rely=0.1)
 
 
