@@ -34,7 +34,7 @@ def check_database():
         cur2.execute('CREATE TABLE  details  (Emirates_ID  char(18) NOT NULL primary key,username  varchar(20) NOT NULL,Name  varchar(30) NOT NULL,address  varchar(50) NOT NULL,insurance  varchar(30) NOT NULL,allergies  varchar(90) )')        
         cur2.execute('CREATE TABLE  doctors  (ID  varchar(15) NOT NULL primary key,name  varchar(20) NOT NULL,gender char(1) , specialisation  varchar(50) NOT NULL)')
         cur2.execute('CREATE TABLE timings ( Doc_ID varchar(15) PRIMARY KEY NOT NULL, 6AM char(1) DEFAULT "Y", 7AM char(1) DEFAULT "Y", 8AM char(1) DEFAULT "Y", 9AM char(1) DEFAULT "Y", 10AM char(1) DEFAULT "Y", 11AM char(1) DEFAULT "Y", 12PM char(1) DEFAULT "Y"')
-        cur2.execute('CREATE TABLE feedback ( user varchar(20), feed varchar(500) DEFAULT NULL, FOREIGN KEY (user) REFERENCES login (username))')
+        cur2.execute('CREATE TABLE feedback ( user varchar(20), feed varchar(500) DEFAULT NULL)')
         sqlcon.commit()
         cur2.close()
     
