@@ -557,8 +557,9 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
     submitbut = CTkButton(master=tab3,text='submit!', font=('Dubai', 18),command=lambda:feedback())
     submitbut.pack(pady=15)
 
-    booklabel = CTkLabel(master=tab2, text="Book your appointment.", font=('Dubai', 20), height = 0)
-    booklabel.pack()
+    frame_label = CTkLabel(master=tab2, text="choose specialization.", font=('Dubai', 20), height = 0)
+    frame_label.pack(pady=10)
+
 
     catframe = CTkScrollableFrame(master=tab2,height=500,width=400,fg_color = '#333333')
     catframe.place(relx=0.5,rely=0.5,anchor='center')
@@ -572,11 +573,15 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
     spl = home_cur.fetchall()
 
     def spl_fn(spl_var):
+
+        frame_label.configure(text='choose one of our amazing doctors')
+
         bgdocframe = CTkFrame(master=tab2,height=500,width=400)
         bgdocframe.place(relx=0.5,rely=0.5,anchor='center')
         docframe = CTkScrollableFrame(master=bgdocframe,height=500,width=400)
         docframe.pack()
         def _back():
+            frame_label.configure(text='choose specialization')
             bgdocframe.destroy()
             back_cat.destroy()
 
@@ -587,12 +592,14 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
         home_cur.execute(f'select * from doctors where specialisation = "{spl_var[0]}"')
 
         def doctors(doc_var):
+            frame_label.configure(text='what time would you like?')
             bgtimeframe = CTkFrame(master=tab2,height=500,width=400)
             bgtimeframe.place(relx=0.5,rely=0.5,anchor='center')
             timeframe = CTkScrollableFrame(master=bgtimeframe,height=500,width=400)
             timeframe.place(relx=0.5,rely=0.5,anchor='center')
 
             def _back():
+                frame_label.configure(text='choose one of our amazing doctors')
                 bgtimeframe.destroy()
                 back_cat.destroy()
 
@@ -604,6 +611,7 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
             time=home_cur.fetchone()
 
             def doc_time(time_var):
+                frame_label.configure(text='would you like to confirm your appointment?')
                 apptframe = CTkFrame(master=tab2,height=520,width=425,fg_color = '#333333')
                 apptframe.place(relx=0.5,rely=0.5,anchor='center')
 
@@ -611,6 +619,7 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
                 apptlabel.pack(padx=100,pady=225)
                 
                 def accepted():
+                    frame_label.configure(text='we look forward to meeting you.')
                     accframe = CTkFrame(master=tab2,height=520,width=425,fg_color = '#333333')
                     accframe.place(relx=0.5,rely=0.5,anchor='center')
 
@@ -618,6 +627,7 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
                     acclabel.pack(padx=100,pady=225)
 
                     def _back():
+                        frame_label.configure(text='would you like to confirm your appointment?')
                         accframe.destroy()
                         back_cat.destroy()
 
@@ -633,6 +643,7 @@ Ut feugiat nunc nec eros ultrices aliquet.'''
                 appt_button.place(relx=0.63,rely=0.9)
 
                 def _back():
+                    frame_label.configure(text='what time would you like?')
                     apptframe.destroy()
                     back_cat.destroy()
 
