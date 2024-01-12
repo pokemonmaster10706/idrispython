@@ -1,8 +1,9 @@
-import pickle
+import pickle,tabulate
 
 def enter(file):
     with open(f'{file}','rb') as bf:
-        rec = pickle.load(bf)
+        try:rec = pickle.load(bf)
+        except: rec=[]
     with open(f'{file}','wb') as bf:
         id = int(input('enter employee id: '))
         name = input('enter employee name: ')
@@ -14,10 +15,8 @@ def enter(file):
 def display(file):
     with open(f'{file}','rb') as bf:
         rec = pickle.load(bf)
-        for i in rec:
-            for j in i:
-                print(j,end=' ')
-            print('\n')
+        print(tabulate.tabulate(rec,headers=['id','name','salary']))
+        print('\n')
 
 enter('picklefile.bat')
 display('picklefile.bat')
