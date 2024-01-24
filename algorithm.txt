@@ -1,0 +1,30 @@
+START
+
+1. Initialise Variables:
+    f(x) = Function To Be Optimised
+    x = Independant Variable
+
+2. Calculate Derivative:
+    Derivate f(x) to get f'(x)
+
+3. Find Critical Points:
+    Equate f'(x) = 0
+    Collect the Values for x that Satisfy the Equation
+    These are the Critical Points
+
+4. Calculate Second Derivative:
+    Derivate f'(x) to get f''(x)
+
+5. Substitute Values of x:
+    Substitute the Values of x that we got in step 3
+    if f''(x) < 0:
+        Point of local Maxima
+    elif f''(x) > 0:
+        Point of local Minima
+    elif f''(x) = 0:
+        Point of Convergence
+
+END
+
+
+

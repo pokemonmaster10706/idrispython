@@ -1,284 +1,135 @@
-import random
-from colorama import Fore
-import tkinter as tk
-
-
-tn = 0
-score={}
-l=[]
-v = 'aeiou'
-
-last='a'
-round_init = 0
-run=0
-wordl = []
-z = 0
-
-def game():
-    global word, v, last, round_init, run, wordl, r, z, n, frame
-    z = 0
-
-    word = textbox.get("1.0",'end-1c')
-    textbox.delete("1.0",'end-1c')
-    if word.isalpha():
-
-
-        if word.startswith(last):
-
-
-            if word not in wordl:
-                wordl.append(word)
-
-                for i in word.lower():
-                    if i in v:
-                        score[l[r]] += 10
-                        z += 10
-                    else:
-                        score[l[r]] += 5
-                        z += 5
-                print(Fore.GREEN + l[r],'gets',z,'points for the word',word)
-                if r == n-1:
-                    r = 0
-                else:
-                    r += 1
-                last = word[-1]
-                strt = tk.Label(master=frame,text='\n\nnext player '+l[r]+ ' enter a word that starts with '+ last, font=('Berlin Sans FB',30))
-                strt.pack(padx=20, pady=25)
-                frame.place()
-                #frame.after(100,update)
-
-                run += 1
-            else:
-                print(Fore.RED + 'player',l[r],'loses ten points because',word,'has already been input please enter a word that has not already been used')
-                score[l[r]] -= 10
-        else:
-            print(Fore.RED + 'player',l[r],'loses ten points because',word,'does not start with', last, 'please enter a word that starts with',last)
-            score[l[r]] -= 10
-    else :
-        print(Fore.RED + 'please dont input anything other than alphabet')
-
-
-
-def retrieve_word():
-    global word
-    word = textbox.get("1.0",'end-1c')
-    textbox.delete("1.0",'end-1c')
-    game_starts.after(100,close_game_starts)
-
-def retrieve_round_number():
-    global rounds_no
-    rounds_no = textbox.get("1.0",'end-1c')
-    print(Fore.YELLOW + 'number of rounds : ', rounds_no)
-    round_number.after(100,close_round_number)
-
-def retrieve_input_name():
-    global name
-    name = textbox.get("1.0",'end-1c')
-    player_name.after(100,close_player_name)
-
-def close_score_window():
-    score_window.destroy()
-
-def close_game_starts():
-    game_starts.destroy()
-
-def close_round_number():
-    round_number.destroy()
-
-def close_player_name():
-    player_name.destroy()
-
-def close_player_no():
-    player_no.destroy()
-
-def btn1_cmd():
-    global n
-    n = 2
-    player_no.after(100, close_player_no)
-    print(Fore.GREEN + 'number of players: ',n)
-
-def btn2_cmd():
-    global n
-    n = 3
-    player_no.after(100, close_player_no)
-    print(Fore.GREEN + 'number of players: ',n)
-
-def btn3_cmd():
-    global n
-    n = 4
-    player_no.after(100, close_player_no)
-    print(Fore.GREEN + 'number of players: ',n)
-
-def btn4_cmd():
-    global n
-    n = 5
-    player_no.after(100, close_player_no)
-    print(Fore.GREEN + 'number of players: ',n)
 
-player_no = tk.Tk()
-player_no.geometry('600x600')
-player_no.title('WORD GAME - by idris')
-strt = tk.Label(master=player_no, text='how many people are playing?', font=('Berlin Sans FB',30))
-strt.pack(padx=20, pady=25)
-
-#textbox = tk.Text(player_no, height=1, font=('Arial',16))
-#textbox.pack()
-
-buttonframe = tk.Frame(player_no)
-buttonframe.columnconfigure(0,weight=1)
-buttonframe.columnconfigure(1,weight=1)
-
-btn1= tk.Button(buttonframe, text='2', font=('Arial',18), command=btn1_cmd)
-btn1.grid(row=0, column=0, sticky='news')
-
-btn2= tk.Button(buttonframe, text='3', font=('Arial',18), command=btn2_cmd)
-btn2.grid(row=0, column=1, sticky='news')
-
-#btn3= tk.Button(buttonframe, text='4', font=('Arial',18))
-#btn3.grid(row=0, column=2, sticky='news')
-
-btn3= tk.Button(buttonframe, text='4', font=('Arial',18), command=btn3_cmd)
-btn3.grid(row=1, column=0, sticky='news')
-
-btn4= tk.Button(buttonframe, text='5', font=('Arial',18), command=btn4_cmd)
-btn4.grid(row=1, column=1, sticky='news')
-
-#btn6= tk.Button(buttonframe, text='7', font=('Arial',18))
-#btn6.grid(row=1, column=2, sticky='news')
-
-buttonframe.pack(fill='x')
-
-player_no.mainloop()
-
-while True:
-    player_name = tk.Tk()
-    player_name.geometry('600x600')
-    player_name.title('WORD GAME - by idris')
-    strt = tk.Label(master=player_name,text='enter player '+ str(tn+1) +' name', font=('Berlin Sans FB',30))
-    strt.pack(padx=20, pady=25)
-
-    textbox = tk.Text(player_name,height=1,font=('Arial',16))
-    textbox.pack(padx=10,pady=10)
-
-    btn = tk.Button(player_name, text='enter',font=('Arial', 18),command=retrieve_input_name)
-    btn.pack(padx=10, pady=10)
-    player_name.mainloop()
-#    time.sleep(2)
-#    print('l')
-    if name in l:
-        print(Fore.RED + '\n\nname has already been entered please use a different name\n')
-        continue
-    tn += 1
-    score[name]=0
-    l.append(name)
-    print(Fore.GREEN + 'player',tn,'is',name)
-    if n == tn:
-        break
-
-round_number = tk.Tk()
-round_number.geometry('600x600')
-round_number.title('WORD GAME - by idris')
-strt = tk.Label(master=round_number,text='enter how many rounds: ', font=('Berlin Sans FB',30))
-strt.pack(padx=20, pady=25)
-
-textbox = tk.Text(round_number,height=1,font=('Arial',16))
-textbox.pack(padx=10,pady=10)
-
-btn = tk.Button(round_number, text='enter',font=('Arial', 18),command=retrieve_round_number)
-btn.pack(padx=10, pady=10)
-round_number.mainloop()
-
-
-game_starts = tk.Tk()
-game_starts.geometry('1200x600')
-game_starts.title('WORD GAME - by idris')
-
-r = random.randint(1,n) - 1
-frame = tk.Frame(game_starts)
-
-
-strt = tk.Label(master=frame,text=l[r]+' starts\n\nfirst player ' +l[r]+ ' enter a word that starts with '+last, font=('Berlin Sans FB',30))
-strt.pack(padx=20, pady=25)
-
-btn = tk.Button(frame, text='enter',font=('Arial', 18),command=game)
-btn.pack(padx=10, pady=10)
-
-strt = tk.Label(master=frame,text=l[r]+ ' enter word: ', font=('Berlin Sans FB',30))
-strt.pack(padx=20, pady=25)
-
-textbox = tk.Text(frame,height=1,font=('Arial',16))
-textbox.pack(padx=10,pady=10)
-
-frame.pack()
-
-game_starts.mainloop()
-'''
-
-game_starts = tk.Tk()
-game_starts.geometry('1200x600')
-game_starts.title('WORD GAME - by idris')
-'''
-
-while True:
-    z = 0
-
-#    btn = tk.Button(game_starts, text='enter',font=('Arial', 18),command=game)
-#    btn.pack(padx=10, pady=10)
-
-    if run == n:
-        run = 0
-        round_init += 1
-        if int(round_init) == int(rounds_no):
-            print(Fore.YELLOW + 'all rounds have finished')
-            game_starts.after(100,close_game_starts)
-            break
-    frame = tk.Frame(game_starts)
-    strt = tk.Label(master=frame,text='\n\nnext player '+l[r]+ ' enter a word that starts with '+ last, font=('Berlin Sans FB',30))
-    strt.pack(padx=20, pady=25)
-
-    strt1 = tk.Label(master=frame,text=l[r]+' enter word: ', font=('Berlin Sans FB',30))
-    strt1.pack(padx=20, pady=25)
-
-    textbox = tk.Text(frame,height=1,font=('Arial',16))
-    textbox.pack(padx=10,pady=10)
-
-    btn = tk.Button(frame, text='enter',font=('Arial', 18),command=game)
-    btn.pack(padx=10, pady=10)
-
-    frame.place()
-
-game_starts.mainloop()
-
-
-score_window = tk.Tk()
-score_window.geometry('800x600')
-score_window.title('WORD GAME - by idris')
-
-min = score[l[0]]
-max = score[l[0]]
-#print(score)
-for k,v in score.items():
-    if v >= max:
-        max = v
-        win = k
-    if v <= min:
-        min = v
-        lose = k
-
-strt = tk.Label(master=score_window,text='winner is '+win+' with '+str(max)+' points \n \n CONGRATS!!', font=('Berlin Sans FB',30))
-strt.pack(padx=20, pady=25)
-
-strt1 = tk.Label(master=score_window,text='\nloser is '+lose+' with a total of '+str(min)+' points\n\n sed lyfe', font=('Berlin Sans FB',30))
-strt1.pack(padx=20, pady=25)
-
-btn = tk.Button(score_window, text='close',font=('Arial', 18),command=close_score_window)
-btn.pack(padx=10, pady=10)
-
-
-print(Fore.GREEN + '\n\nwinner is',win,'with',max,'points')
-
-print(Fore.RED + '\n\nloser is',lose,'with a total of',min,'points')
-
-print(Fore.WHITE + '')
-
-score_window.mainloop()
+from customtkinter import *
+import os
+from PIL import Image
+
+
+
+class ScrollableCheckBoxFrame(CTkScrollableFrame):
+    def __init__(self, master, item_list, command=None, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.command = command
+        self.checkbox_list = []
+        for i, item in enumerate(item_list):
+            self.add_item(item)
+
+    def add_item(self, item):
+        checkbox = CTkCheckBox(self, text=item)
+        if self.command is not None:
+            checkbox.configure(command=self.command)
+        checkbox.grid(row=len(self.checkbox_list), column=0, pady=(0, 10))
+        self.checkbox_list.append(checkbox)
+
+    def remove_item(self, item):
+        for checkbox in self.checkbox_list:
+            if item == checkbox.cget("text"):
+                checkbox.destroy()
+                self.checkbox_list.remove(checkbox)
+                return
+
+    def get_checked_items(self):
+        return [checkbox.cget("text") for checkbox in self.checkbox_list if checkbox.get() == 1]
+
+
+class ScrollableRadiobuttonFrame(CTkScrollableFrame):
+    def __init__(self, master, item_list, command=None, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.command = command
+        self.radiobutton_variable = StringVar()
+        self.radiobutton_list = []
+        for i, item in enumerate(item_list):
+            self.add_item(item)
+
+    def add_item(self, item):
+        radiobutton = CTkRadioButton(self, text=item, value=item, variable=self.radiobutton_variable)
+        if self.command is not None:
+            radiobutton.configure(command=self.command)
+        radiobutton.grid(row=len(self.radiobutton_list), column=0, pady=(0, 10))
+        self.radiobutton_list.append(radiobutton)
+
+    def remove_item(self, item):
+        for radiobutton in self.radiobutton_list:
+            if item == radiobutton.cget("text"):
+                radiobutton.destroy()
+                self.radiobutton_list.remove(radiobutton)
+                return
+
+    def get_checked_item(self):
+        return self.radiobutton_variable.get()
+
+
+class ScrollableLabelButtonFrame(CTkScrollableFrame):
+    def __init__(self, master, command=None, **kwargs):
+        super().__init__(master, **kwargs)
+        self.grid_columnconfigure(0, weight=1)
+
+        self.command = command
+        self.radiobutton_variable = StringVar()
+        self.label_list = []
+        self.button_list = []
+
+    def add_item(self, item, image=None):
+        label = CTkLabel(self, text=item, image=image, compound="left", padx=5, anchor="w")
+        button = CTkButton(self, text="Command", width=100, height=24)
+        if self.command is not None:
+            button.configure(command=lambda: self.command(item))
+        label.grid(row=len(self.label_list), column=0, pady=(0, 10), sticky="w")
+        button.grid(row=len(self.button_list), column=1, pady=(0, 10), padx=5)
+        self.label_list.append(label)
+        self.button_list.append(button)
+
+    def remove_item(self, item):
+        for label, button in zip(self.label_list, self.button_list):
+            if item == label.cget("text"):
+                label.destroy()
+                button.destroy()
+                self.label_list.remove(label)
+                self.button_list.remove(button)
+                return
+
+
+class App(CTk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("CTkScrollableFrame example")
+        self.grid_rowconfigure(0, weight=1)
+        self.columnconfigure(2, weight=1)
+
+        # create scrollable checkbox frame
+        self.scrollable_checkbox_frame = ScrollableCheckBoxFrame(master=self, width=200, command=self.checkbox_frame_event,
+                                                                 item_list=[f"item {i}" for i in range(50)])
+        self.scrollable_checkbox_frame.grid(row=0, column=0, padx=15, pady=15, sticky="ns")
+        self.scrollable_checkbox_frame.add_item("new item")
+
+        # create scrollable radiobutton frame
+        self.scrollable_radiobutton_frame = ScrollableRadiobuttonFrame(master=self, width=500, command=self.radiobutton_frame_event,
+                                                                       item_list=[f"item {i}" for i in range(100)],
+                                                                       label_text="ScrollableRadiobuttonFrame")
+        self.scrollable_radiobutton_frame.grid(row=0, column=1, padx=15, pady=15, sticky="ns")
+        self.scrollable_radiobutton_frame.configure(width=200)
+        self.scrollable_radiobutton_frame.remove_item("item 3")
+
+        # create scrollable label and button frame
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.scrollable_label_button_frame = ScrollableLabelButtonFrame(master=self, width=300, command=self.label_button_frame_event, corner_radius=0)
+        self.scrollable_label_button_frame.grid(row=0, column=2, padx=0, pady=0, sticky="nsew")
+        for i in range(20):  # add items with images
+            self.scrollable_label_button_frame.add_item(f"image and item {i}", image=CTkImage(Image.open(os.path.join(current_dir, "test_images", "chat_light.png"))))
+
+    def checkbox_frame_event(self):
+        print(f"checkbox frame modified: {self.scrollable_checkbox_frame.get_checked_items()}")
+
+    def radiobutton_frame_event(self):
+        print(f"radiobutton frame modified: {self.scrollable_radiobutton_frame.get_checked_item()}")
+
+    def label_button_frame_event(self, item):
+        print(f"label button frame clicked: {item}")
+
+
+if __name__ == "__main__":
+    set_appearance_mode("dark")
+    app = App()
+    app.mainloop()

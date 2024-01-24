@@ -1,24 +1,36 @@
-pw = input("Enter PASSWORD: ")
-vd = False
-no = (0,1,2,3,4,5,6,7,8,9)
-up = ('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z')
-spl = ('~','`','!','@','#','$','%','^','&','*','(',')','_','+','=',':',';',',','.',"''")
-if len(pw) < 7:
-    vd = False
-for i in pw:
-    if i in no:
-        vd = True
+paswrd = input("Enter PASSWORD: ")
+length_check = False
+
+nmbr_check = False
+
+spl = '`~!@#$%^&*()_-+={[:;\\\'\"<>,.?/]}'
+spl_check = False
+
+upper_check = False
+
+if len(paswrd) > 7:
+    length_check = True
+    print('1')
+for i in paswrd:
+    if i.isdigit():
+        print('2')
+        nmbr_check = True
+        continue
     else:
-        vd = False
-    if i in up:
-        vd = True
-    else:
-        vd = False
-    if i in spl:
-        vd = True
-    else:
-        vd = False
-if vd == True:
-print('The Password is VALID.')
+        if i in spl:
+            print('3')
+            spl_check = True
+            continue
+        else:
+            if i.isupper():
+                print('4')
+                upper_check = True
+                continue
+            else:
+                print('5')
+                continue
+print('6')
+if length_check == spl_check == nmbr_check == upper_check == True :
+    print('Valid')
 else:
-print('The Password is INVALID.')
+    print('invalid')
